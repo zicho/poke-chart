@@ -5,51 +5,53 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
-  import type { GameResults } from '$lib/types';
+  import { getDateStringISO } from '$lib/dateUtils';
+  import type { GameWin } from '$lib/types';
 
   let {
     open = $bindable(),
     onSave
   }: {
     open: boolean;
-    onSave: (results: GameResults) => void;
+    onSave: (results: GameWin) => void;
   } = $props();
 
-  let martinWins = $state(0);
+  let martinRoundWins = $state(0);
   let martinAces = $state(0);
 
-  let arvidWins = $state(0);
+  let arvidRoundWins = $state(0);
   let arvidAces = $state(0);
 
-  let disableWinIncrement = $derived(arvidWins + martinWins >= 5);
+  let disableWinIncrement = $derived(arvidRoundWins + martinRoundWins >= 5);
   let disableAceIncrement = $derived(arvidAces + martinAces >= 5);
 
   $effect(() => {
-    if (martinAces > martinWins) {
-      martinAces = martinWins;
+    if (martinAces > martinRoundWins) {
+      martinAces = martinRoundWins;
     }
 
-    if (arvidAces > arvidWins) {
-      arvidAces = arvidWins;
+    if (arvidAces > arvidRoundWins) {
+      arvidAces = arvidRoundWins;
     }
   });
 
-  function returnResults(): GameResults {
-    let winner = (martinWins > arvidWins ? 'martin' : 'arvid') as
+  function returnResults(): GameWin {
+    let winner = (martinRoundWins > arvidRoundWins ? 'martin' : 'arvid') as
       | 'martin'
       | 'arvid';
 
-    const results: GameResults = {
+    const results: GameWin = {
+      dateStamp: getDateStringISO(),
       winner,
-      martinWins,
+      martinRoundWins,
       martinAces,
-      arvidWins,
+      arvidRoundWins,
       arvidAces
     };
 
-    martinWins = 0;
+    martinRoundWins = 0;
     martinAces = 0;
-    arvidWins = 0;
+    arvidRoundWins = 0;
     arvidAces = 0;
 
     return results;
@@ -67,7 +69,7 @@
     </div>
     <Counter
       label="Wins"
-      bind:currentVal={martinWins}
+      bind:currentVal={martinRoundWins}
       max={3}
       disableIncrement={disableWinIncrement}
     />
@@ -75,7 +77,7 @@
       label="Aces"
       bind:currentVal={martinAces}
       max={3}
-      disableIncrement={disableAceIncrement || martinAces === martinWins}
+      disableIncrement={disableAceIncrement || martinAces === martinRoundWins}
     />
     <Separator class="mt-4" />
     <div class="grid grid-cols-4 items-center gap-4">
@@ -83,7 +85,7 @@
     </div>
     <Counter
       label="Wins"
-      bind:currentVal={arvidWins}
+      bind:currentVal={arvidRoundWins}
       max={3}
       disableIncrement={disableWinIncrement}
     />
@@ -91,14 +93,14 @@
       label="Aces"
       bind:currentVal={arvidAces}
       max={3}
-      disableIncrement={disableAceIncrement || arvidAces === arvidWins}
+      disableIncrement={disableAceIncrement || arvidAces === arvidRoundWins}
     />
     <Separator class="mt-4" />
     <Dialog.Footer>
       <Button
         type="submit"
         onclick={() => onSave(returnResults())}
-        disabled={martinWins !== 3 && arvidWins !== 3}
+        disabled={martinRoundWins !== 3 && arvidRoundWins !== 3}
         class="w-full">Submit scores</Button
       >
     </Dialog.Footer>

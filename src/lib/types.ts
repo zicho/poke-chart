@@ -1,11 +1,3 @@
-export type GameResults = {
-  winner: 'martin' | 'arvid';
-  martinWins: number;
-  martinAces: number;
-  arvidWins: number;
-  arvidAces: number;
-};
-
 export type ChartData = {
   labels: string[];
   datasets: ChartDataSet[];

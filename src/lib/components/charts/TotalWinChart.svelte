@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getDateStringISO } from '$lib/dateUtils';
   import {
+    barChart,
     getArvidGameWins,
     getMartinGameWins
   } from '$lib/state/TotalWinState.svelte';
@@ -31,7 +32,6 @@
   );
 
   let barCanvasRef = $state<HTMLCanvasElement>();
-  let barChart = $state<Chart>();
 
   let martinGameWins: ChartDataSet = {
     label: 'Martin',
@@ -56,7 +56,7 @@
 
   onMount(() => {
     // Bar Chart Initialization
-    barChart = new Chart(barCanvasRef as HTMLCanvasElement, {
+    barChart.ref = new Chart(barCanvasRef as HTMLCanvasElement, {
       type: 'bar',
       data: barChartData,
       options: {
