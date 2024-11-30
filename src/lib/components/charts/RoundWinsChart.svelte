@@ -5,6 +5,7 @@
     getMartinRoundWins,
     lineChart
   } from '$lib/state/RoundWinsState.svelte';
+  import { Utils } from '$lib/utils';
   import {
     BarController,
     BarElement,
@@ -52,16 +53,16 @@
   let martinRoundWins: ChartDataset<'line'> = {
     label: 'Martin',
     data: getMartinRoundWins(),
-    backgroundColor: 'red',
-    borderColor: 'red',
+    borderColor: Utils.CHART_COLORS.red,
+    backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     ...opts
   };
 
   let arvidRoundWins: ChartDataset<'line'> = {
     label: 'Arvid',
     data: getArvidRoundWins(),
-    backgroundColor: 'green',
-    borderColor: 'green',
+    borderColor: Utils.CHART_COLORS.green,
+    backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     ...opts
   };
 
@@ -120,7 +121,7 @@
           },
           y: {
             type: 'linear',
-            beginAtZero: true,
+            beginAtZero: false,
             ticks: { stepSize: 1 },
             title: {
               display: true,

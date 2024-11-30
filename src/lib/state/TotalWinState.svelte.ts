@@ -17,7 +17,7 @@ export function seedResults(gamesCount: number): GameResults[] {
     let arvidRoundWins = 0;
 
     while (martinRoundWins < 3 && arvidRoundWins < 3) {
-      let ace = Math.random() < 0.1;
+      let ace = Math.random() < 0.05;
 
       if (Math.random() < 0.5) {
         martinRoundWins++;

@@ -6,6 +6,7 @@
     getArvidGameWins,
     getMartinGameWins
   } from '$lib/state/TotalWinState.svelte';
+  import { Utils } from '$lib/utils';
   import {
     BarController,
     BarElement,
@@ -40,16 +41,16 @@
   let martinGameWins: ChartDataset<'bar'> = {
     label: 'Martin',
     data: [getMartinGameWins()],
-    backgroundColor: 'red',
-    borderColor: 'red',
+    borderColor: Utils.CHART_COLORS.red,
+    backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     borderRadius: 10
   };
 
   let arvidGameWins: ChartDataset<'bar'> = {
     label: 'Arvid',
     data: [getArvidGameWins()],
-    backgroundColor: 'green',
-    borderColor: 'green',
+    borderColor: Utils.CHART_COLORS.green,
+    backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     borderRadius: 10
   };
 

@@ -8,6 +8,7 @@
     TooltipProvider,
     TooltipTrigger
   } from '$lib/components/ui/tooltip';
+  import { tweened } from 'svelte/motion';
 
   type StatsCardProps = {
     playerName: string;
@@ -30,6 +31,14 @@
     leader = $bindable(),
     latestWinner = $bindable()
   }: StatsCardProps = $props();
+
+  const roundsTween = tweened(totalRoundWins);
+  const aceTween = tweened(totalAces);
+
+  $effect(() => {
+    $roundsTween = totalRoundWins;
+    $aceTween = totalAces;
+  });
 </script>
 
 <article class="h-full w-full flex-grow rounded-lg">
@@ -52,7 +61,9 @@
         {#if leader}
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger><Crown class="text-amber-600" /></TooltipTrigger>
+              <TooltipTrigger>
+                <Crown class="text-amber-600" /></TooltipTrigger
+              >
               <TooltipContent>
                 <p>Season leader</p>
               </TooltipContent>
@@ -69,12 +80,12 @@
       </p>
       <p class="flex justify-between">
         <span class="font-semibold">Rounds won:</span>
-        {totalRoundWins}
+        {Math.round($roundsTween)}
       </p>
       {#if totalAces > 0}
         <p class="flex justify-between">
           <span class="font-semibold">Aces:</span>
-          {totalAces} ({aceRate}%)
+          {Math.round($aceTween)} ({aceRate}%)
         </p>
       {/if}
       <p class="flex justify-between">

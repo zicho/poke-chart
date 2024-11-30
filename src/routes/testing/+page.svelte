@@ -28,6 +28,12 @@
   } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
   import OverallStatsCard from '$lib/components/OverallStatsCard.svelte';
+  import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+  } from '$lib/components/ui/tooltip';
 
   let registerGameModalOpen = $state(false);
 
@@ -44,9 +50,13 @@
   let totalRoundWinsChartReady = $state(false);
 </script>
 
-<main class="flex h-screen flex-col bg-zinc-200 px-8 pb-4">
-  <section class="flex h-16 items-center justify-center">
-    <Button onclick={registerNewGame}>Register game</Button>
+<main class="flex h-screen flex-col bg-zinc-200 px-4 pb-4">
+  <section class="flex h-16 items-center space-x-4">
+    <Button
+      class="w-full"
+      onclick={registerNewGame}
+      aria-label="Register new game">Register game</Button
+    >
   </section>
 
   <section class="mb-4 flex flex-1 space-x-4">
