@@ -1,5 +1,5 @@
 import { getDateStringISO } from '$lib/dateUtils';
-import type { GameWin as GameResults } from '$lib/types';
+import type { GameWin as GameResults, Winner } from '$lib/types';
 import type { Chart } from 'chart.js';
 import { lineChart } from './RoundWinsState.svelte';
 
@@ -48,7 +48,7 @@ export let barChart = $state<ChartWrapper>({
   ref: undefined
 });
 
-export let gameWins = $state<GameResults[]>(seedResults(1));
+export let gameWins = $state<GameResults[]>(seedResults(5));
 
 export const getMartinGameWins = () =>
   gameWins.filter((x) => x.winner === 'martin').length;
@@ -112,3 +112,16 @@ export function addGameResults(results: GameResults) {
   lineChart.ref.update();
   barChart.ref.update();
 }
+
+export const getMartinWinRate = () => calculateWinRate(getMartinGameWins());
+export const getArvidWinRate = () => calculateWinRate(getArvidGameWins());
+
+const calculateWinRate = (wins: number) => {
+  const totalGames = gameWins.length;
+  return totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
+};
+
+export const getLatestGameWinner = (): Winner | null => {
+  if (!gameWins.length) return null;
+  return gameWins[gameWins.length - 1].winner;
+};

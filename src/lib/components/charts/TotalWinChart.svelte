@@ -2,6 +2,7 @@
   import { getDateStringISO } from '$lib/dateUtils';
   import {
     barChart,
+    gameWins,
     getArvidGameWins,
     getMartinGameWins
   } from '$lib/state/TotalWinState.svelte';
@@ -50,7 +51,7 @@
   };
 
   let barChartData: ChartData = {
-    labels: [getDateStringISO()],
+    labels: [...new Set(gameWins.map((x) => x.dateStamp))],
     datasets: [martinGameWins, arvidGameWins]
   };
 

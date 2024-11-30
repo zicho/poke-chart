@@ -1,9 +1,23 @@
 <script lang="ts">
   import RoundWinsChart from '$lib/components/charts/RoundWinsChart.svelte';
   import TotalWinChart from '$lib/components/charts/TotalWinChart.svelte';
+  import StatsCard from '$lib/components/StatsCard.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import RegisterGameDialog from '$lib/dialogs/RegisterGameDialog.svelte';
-  import { addGameResults } from '$lib/state/TotalWinState.svelte';
+  import {
+    getArvidRoundWinsTotal,
+    getMartinRoundWins,
+    getMartinRoundWinsTotal
+  } from '$lib/state/RoundWinsState.svelte';
+  import {
+    addGameResults,
+    gameWins,
+    getArvidGameWins,
+    getArvidWinRate,
+    getLatestGameWinner,
+    getMartinGameWins,
+    getMartinWinRate
+  } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
 
   let registerGameModalOpen = $state(false);
@@ -30,6 +44,27 @@
     <!-- Line Chart -->
     <div class="flex-1">
       <RoundWinsChart />
+    </div>
+  </section>
+  <section class="w-full">
+    <h1 class="mb-4 text-2xl font-semibold">Stats</h1>
+    <div class="flex space-x-4">
+      <StatsCard
+        playerName="Martin"
+        totalGameWins={getMartinGameWins()}
+        totalRoundWins={getMartinRoundWinsTotal()}
+        winRate={getMartinWinRate()}
+        leader={getMartinGameWins() > getArvidGameWins()}
+        latestWinner={getLatestGameWinner() === 'martin'}
+      />
+      <StatsCard
+        playerName="Arvid"
+        totalGameWins={getArvidGameWins()}
+        totalRoundWins={getArvidRoundWinsTotal()}
+        winRate={getArvidWinRate()}
+        leader={getArvidGameWins() > getMartinGameWins()}
+        latestWinner={getLatestGameWinner() === 'arvid'}
+      />
     </div>
   </section>
 </main>
