@@ -66,7 +66,7 @@
       <h1 class="mb-4 text-2xl font-semibold">Stats</h1>
       <div class="flex h-full items-stretch space-x-4 pb-8">
         <StatsCard
-          playerName="Martin"
+          playerName="Player 1"
           totalGameWins={getMartinGameWins()}
           totalRoundWins={getMartinRoundWinsTotal()}
           totalAces={getMartinAcesTotal()}
@@ -76,7 +76,7 @@
           latestWinner={getLatestGameWinner() === 'martin'}
         />
         <StatsCard
-          playerName="Arvid"
+          playerName="Player 2"
           totalGameWins={getArvidGameWins()}
           totalRoundWins={getArvidRoundWinsTotal()}
           totalAces={getArvidAcesTotal()}

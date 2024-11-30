@@ -65,7 +65,7 @@
     </Dialog.Header>
 
     <div class="grid grid-cols-4 items-center gap-4">
-      <Label class="text-lg font-semibold">Martin</Label>
+      <Label class="text-lg font-semibold">Player 1</Label>
     </div>
     <Counter
       label="Wins"
@@ -81,7 +81,7 @@
     />
     <Separator class="mt-4" />
     <div class="grid grid-cols-4 items-center gap-4">
-      <Label class="text-lg font-semibold">Arvid</Label>
+      <Label class="text-lg font-semibold">Player 2</Label>
     </div>
     <Counter
       label="Wins"

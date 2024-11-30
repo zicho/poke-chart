@@ -44,9 +44,9 @@
 <article class="h-full w-full flex-grow rounded-lg">
   <Card.Root class="flex h-full flex-col rounded-lg shadow-md">
     <Card.Header class="flex flex-row justify-between space-x-2">
-      <h2 class="text-2xl font-semibold text-gray-900">
+      <h1 class="text-2xl font-semibold text-primary">
         {playerName}
-      </h2>
+      </h1>
       <div class="flex space-x-2">
         {#if latestWinner}
           <TooltipProvider>

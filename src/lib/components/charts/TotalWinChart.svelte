@@ -39,7 +39,7 @@
   let barCanvasRef = $state<HTMLCanvasElement>();
 
   let martinGameWins: ChartDataset<'bar'> = {
-    label: 'Martin',
+    label: 'Player 1',
     data: [getMartinGameWins()],
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
@@ -47,7 +47,7 @@
   };
 
   let arvidGameWins: ChartDataset<'bar'> = {
-    label: 'Arvid',
+    label: 'Player 2',
     data: [getArvidGameWins()],
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),

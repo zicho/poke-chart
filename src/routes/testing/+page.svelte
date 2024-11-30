@@ -34,6 +34,8 @@
     TooltipProvider,
     TooltipTrigger
   } from '$lib/components/ui/tooltip';
+  import { Plus } from 'lucide-svelte';
+  import Label from '$lib/components/ui/label/label.svelte';
 
   let registerGameModalOpen = $state(false);
 
@@ -53,9 +55,10 @@
 <main class="flex h-screen flex-col bg-zinc-200 px-4 pb-4">
   <section class="flex h-16 items-center space-x-4">
     <Button
-      class="w-full"
+      variant="default"
       onclick={registerNewGame}
-      aria-label="Register new game">Register game</Button
+      aria-label="Register new game"
+      ><Plus /><Label class="font-semibold">Register game</Label></Button
     >
   </section>
 
@@ -75,7 +78,7 @@
   <section class="flex flex-1 space-x-4">
     {#if totalRoundWinsChartReady && totalWinChartReady}
       <PlayerStatsCard
-        playerName="Martin"
+        playerName="Player 1"
         totalGameWins={getMartinGameWins()}
         totalRoundWins={getMartinRoundWinsTotal()}
         totalAces={getMartinAcesTotal()}
@@ -85,7 +88,7 @@
         latestWinner={getLatestGameWinner() === 'martin'}
       />
       <PlayerStatsCard
-        playerName="Arvid"
+        playerName="Player 2"
         totalGameWins={getArvidGameWins()}
         totalRoundWins={getArvidRoundWinsTotal()}
         totalAces={getArvidAcesTotal()}

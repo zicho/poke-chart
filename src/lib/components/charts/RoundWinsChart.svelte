@@ -51,7 +51,7 @@
   };
 
   let martinRoundWins: ChartDataset<'line'> = {
-    label: 'Martin',
+    label: 'Player 1',
     data: getMartinRoundWins(),
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
@@ -59,7 +59,7 @@
   };
 
   let arvidRoundWins: ChartDataset<'line'> = {
-    label: 'Arvid',
+    label: 'Player 2',
     data: getArvidRoundWins(),
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),

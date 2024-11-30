@@ -1,5 +1,6 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card';
+  import { tweened } from 'svelte/motion';
 
   type StatsCardProps = {
     totalGamesPlayed: number;
@@ -16,12 +17,18 @@
     aceRate,
     lastGamePlayed
   }: StatsCardProps = $props();
+
+  const roundsTween = tweened(totalRoundsPlayed);
+
+  $effect(() => {
+    $roundsTween = totalRoundsPlayed;
+  });
 </script>
 
 <article class="h-full w-full flex-grow rounded-lg">
   <Card.Root class="flex h-full flex-col rounded-lg shadow-md">
     <Card.Header class="flex flex-row justify-between space-x-2">
-      <h2 class="text-2xl font-semibold text-gray-900">Overall stats</h2>
+      <h2 class="text-2xl font-semibold text-primary">Overall stats</h2>
     </Card.Header>
 
     <Card.Content class="flex-1 space-y-4 text-lg text-gray-700">
@@ -31,7 +38,7 @@
       </p>
       <p class="flex justify-between">
         <span class="font-semibold">Rounds played:</span>
-        {totalRoundsPlayed}
+        {Math.round($roundsTween)}
       </p>
       <p class="flex justify-between">
         <span class="font-semibold">Aces:</span>
