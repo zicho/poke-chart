@@ -32,3 +32,24 @@ export const getMartinAceRate = () =>
   calculateAceRate(getMartinRoundWinsTotal(), getMartinAcesTotal());
 export const getArvidAceRate = () =>
   calculateAceRate(getArvidRoundWinsTotal(), getArvidAcesTotal());
+
+export const getTotalRoundsPlayed = () => {
+  const totalRoundsPlayed = gameWins.reduce(
+    (acc, game) => acc + game.martinRoundWins + game.arvidRoundWins,
+    0
+  );
+
+  return totalRoundsPlayed;
+};
+
+export const getTotalAces = () => {
+  const totalRoundsPlayed = gameWins.reduce(
+    (acc, game) => acc + game.martinAces + game.arvidAces,
+    0
+  );
+
+  return totalRoundsPlayed;
+};
+
+export const getTotalAceRate = () =>
+  calculateAceRate(getTotalRoundsPlayed(), getTotalAces());

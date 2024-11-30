@@ -5,17 +5,20 @@
     getMartinRoundWins,
     lineChart
   } from '$lib/state/RoundWinsState.svelte';
-  import type { ChartData, ChartDataSet } from '$lib/types';
   import {
     BarController,
     BarElement,
     CategoryScale,
     Chart,
+    Legend,
     LinearScale,
     LineController,
     LineElement,
     PointElement,
-    Tooltip
+    Title,
+    Tooltip,
+    type ChartData,
+    type ChartDataset
   } from 'chart.js';
   import { onMount } from 'svelte';
 
@@ -24,6 +27,8 @@
   // Register necessary controllers and elements
   Chart.register(
     Tooltip,
+    Legend,
+    Title,
     BarController,
     BarElement,
     CategoryScale,
@@ -35,20 +40,29 @@
 
   let lineCanvasRef = $state<HTMLCanvasElement>();
 
-  let martinRoundWins: ChartDataSet = {
+  let opts = {
+    fill: false,
+    pointStyle: 'circle',
+    pointRadius: 5,
+    pointHoverRadius: 10,
+    cursor: 'pointer',
+    tension: 0.15
+  };
+
+  let martinRoundWins: ChartDataset<'line'> = {
     label: 'Martin',
     data: getMartinRoundWins(),
     backgroundColor: 'red',
     borderColor: 'red',
-    fill: false
+    ...opts
   };
 
-  let arvidRoundWins: ChartDataSet = {
+  let arvidRoundWins: ChartDataset<'line'> = {
     label: 'Arvid',
     data: getArvidRoundWins(),
     backgroundColor: 'green',
     borderColor: 'green',
-    fill: false
+    ...opts
   };
 
   const generateLabels = (length: number): string[] => {
@@ -68,17 +82,33 @@
         plugins: {
           tooltip: {
             callbacks: {
-              // Customize the label content
               label: function (tooltipItem) {
-                console.dir(tooltipItem.chart.data);
-                // tooltipItem contains the data for the tooltip
                 const label = tooltipItem.dataset.label || '';
                 const value = tooltipItem.raw; // the value of the data point
                 return `${label}: ${value} wins`;
               },
-              // Customize the title content (optional)
               title: function (tooltipItem) {
-                return `Custom Title: ${tooltipItem[0].label}`;
+                return `Game played at ${tooltipItem[0].label}`;
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Rounds won',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              bottom: 20
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom', // Adjust legend position if needed
+            labels: {
+              font: {
+                size: 18 // Customize font size
               }
             }
           }
@@ -86,14 +116,20 @@
         responsive: true,
         scales: {
           x: {
-            type: 'category',
-            title: { display: true, text: 'Day' }
+            type: 'category'
           },
           y: {
             type: 'linear',
             beginAtZero: true,
             ticks: { stepSize: 1 },
-            title: { display: true, text: 'Total round wins' }
+            title: {
+              display: true,
+              text: 'Rounds won per game',
+              font: {
+                size: 18,
+                weight: 'bold'
+              }
+            }
           }
         }
       }

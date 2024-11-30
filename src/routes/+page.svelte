@@ -1,7 +1,7 @@
 <script lang="ts">
   import RoundWinsChart from '$lib/components/charts/RoundWinsChart.svelte';
   import TotalWinChart from '$lib/components/charts/TotalWinChart.svelte';
-  import StatsCard from '$lib/components/StatsCard.svelte';
+  import StatsCard from '$lib/components/PlayerStatsCard.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import RegisterGameDialog from '$lib/dialogs/RegisterGameDialog.svelte';
   import {

@@ -84,13 +84,7 @@ export function addGameResults(results: GameResults) {
 
   barChart.ref.data.labels = barChart.ref.data.labels || [];
 
-  console.log(
-    'barChart.ref.data.labels.length',
-    barChart.ref.data.labels.length
-  );
-
   if (!barChart.ref.data.labels.length) {
-    console.log('adding label');
     barChart.ref.data.labels.push(results.dateStamp);
     barChart.ref.update();
   }
@@ -132,3 +126,10 @@ export const getLatestGameWinner = (): Winner | null => {
   if (!gameWins.length) return null;
   return gameWins[gameWins.length - 1].winner;
 };
+
+export const getLatestGameDate = (): string => {
+  if (!gameWins.length) return 'None played yet!';
+  return gameWins[gameWins.length - 1].dateStamp;
+};
+
+export const getTotalGamesPlayed = (): number => gameWins.length;

@@ -6,7 +6,6 @@
     getArvidGameWins,
     getMartinGameWins
   } from '$lib/state/TotalWinState.svelte';
-  import type { ChartData, ChartDataSet } from '$lib/types';
   import {
     BarController,
     BarElement,
@@ -16,7 +15,9 @@
     LineController,
     LineElement,
     PointElement,
-    Tooltip
+    Tooltip,
+    type ChartData,
+    type ChartDataset
   } from 'chart.js';
   import { onMount } from 'svelte';
 
@@ -36,20 +37,20 @@
 
   let barCanvasRef = $state<HTMLCanvasElement>();
 
-  let martinGameWins: ChartDataSet = {
+  let martinGameWins: ChartDataset<'bar'> = {
     label: 'Martin',
     data: [getMartinGameWins()],
     backgroundColor: 'red',
     borderColor: 'red',
-    fill: false
+    borderRadius: 10
   };
 
-  let arvidGameWins: ChartDataSet = {
+  let arvidGameWins: ChartDataset<'bar'> = {
     label: 'Arvid',
     data: [getArvidGameWins()],
     backgroundColor: 'green',
     borderColor: 'green',
-    fill: false
+    borderRadius: 10
   };
 
   let barChartData: ChartData = {
@@ -66,14 +67,42 @@
         responsive: true,
         scales: {
           x: {
-            type: 'category',
-            title: { display: true, text: 'Day' }
+            type: 'category'
           },
           y: {
             type: 'linear',
             beginAtZero: true,
             ticks: { stepSize: 1 },
-            title: { display: true, text: 'Game wins' }
+            title: {
+              display: true,
+              text: 'Total wins per day',
+              font: {
+                size: 18,
+                weight: 'bold'
+              }
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Games won',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              bottom: 20
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom', // Adjust legend position if needed
+            labels: {
+              font: {
+                size: 18 // Customize font size
+              }
+            }
           }
         }
       }

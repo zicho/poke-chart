@@ -1,7 +1,7 @@
 <script lang="ts">
   import RoundWinsChart from '$lib/components/charts/RoundWinsChart.svelte';
   import TotalWinChart from '$lib/components/charts/TotalWinChart.svelte';
-  import StatsCard from '$lib/components/StatsCard.svelte';
+  import PlayerStatsCard from '$lib/components/PlayerStatsCard.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import RegisterGameDialog from '$lib/dialogs/RegisterGameDialog.svelte';
   import * as Card from '$lib/components/ui/card';
@@ -11,19 +11,23 @@
     getArvidRoundWinsTotal,
     getMartinAceRate,
     getMartinAcesTotal,
-    getMartinRoundWins,
-    getMartinRoundWinsTotal
+    getMartinRoundWinsTotal,
+    getTotalAceRate,
+    getTotalAces,
+    getTotalRoundsPlayed
   } from '$lib/state/RoundWinsState.svelte';
   import {
     addGameResults,
-    gameWins,
     getArvidGameWins,
     getArvidWinRate,
+    getLatestGameDate,
     getLatestGameWinner,
     getMartinGameWins,
-    getMartinWinRate
+    getMartinWinRate,
+    getTotalGamesPlayed
   } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
+  import OverallStatsCard from '$lib/components/OverallStatsCard.svelte';
 
   let registerGameModalOpen = $state(false);
 
@@ -60,7 +64,7 @@
 
   <section class="flex flex-1 space-x-4">
     {#if totalRoundWinsChartReady && totalWinChartReady}
-      <StatsCard
+      <PlayerStatsCard
         playerName="Martin"
         totalGameWins={getMartinGameWins()}
         totalRoundWins={getMartinRoundWinsTotal()}
@@ -70,7 +74,7 @@
         leader={getMartinGameWins() > getArvidGameWins()}
         latestWinner={getLatestGameWinner() === 'martin'}
       />
-      <StatsCard
+      <PlayerStatsCard
         playerName="Arvid"
         totalGameWins={getArvidGameWins()}
         totalRoundWins={getArvidRoundWinsTotal()}
@@ -79,6 +83,13 @@
         winRate={getArvidWinRate()}
         leader={getArvidGameWins() > getMartinGameWins()}
         latestWinner={getLatestGameWinner() === 'arvid'}
+      />
+      <OverallStatsCard
+        totalGamesPlayed={getTotalGamesPlayed()}
+        totalRoundsPlayed={getTotalRoundsPlayed()}
+        totalAces={getTotalAces()}
+        aceRate={getTotalAceRate()}
+        lastGamePlayed={getLatestGameDate()}
       />
     {:else}
       <div
