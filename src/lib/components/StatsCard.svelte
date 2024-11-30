@@ -1,12 +1,21 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card';
-  import { Crown, Magnet } from 'lucide-svelte';
+  import { Award, Crown, Magnet, Trophy } from 'lucide-svelte';
+
+  import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+  } from '$lib/components/ui/tooltip';
 
   type StatsCardProps = {
     playerName: string;
     totalGameWins: number;
     totalRoundWins: number;
+    totalAces: number;
     winRate: number;
+    aceRate: number;
     leader: boolean;
     latestWinner: boolean;
   };
@@ -15,30 +24,45 @@
     playerName,
     totalGameWins,
     totalRoundWins,
+    totalAces,
     winRate,
+    aceRate,
     leader = $bindable(),
     latestWinner = $bindable()
   }: StatsCardProps = $props();
 </script>
 
-<article class="w-full rounded-lg bg-gray-50 shadow-lg">
-  <Card.Root class="rounded-lg bg-white shadow-md">
+<article class="h-full w-full flex-grow rounded-lg">
+  <Card.Root class="flex h-full flex-col rounded-lg shadow-md">
     <Card.Header class="flex flex-row justify-between space-x-2">
       <h2 class="text-2xl font-semibold text-gray-900">
         {playerName}
-        {#if leader}(leader){/if}
       </h2>
       <div class="flex space-x-2">
         {#if latestWinner}
-          <Magnet />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger><Award class="text-slate-600" /></TooltipTrigger>
+              <TooltipContent>
+                <p>Won last game</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         {/if}
         {#if leader}
-          <Crown />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger><Crown class="text-amber-600" /></TooltipTrigger>
+              <TooltipContent>
+                <p>Season leader</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         {/if}
       </div>
     </Card.Header>
 
-    <Card.Content class="space-y-4 text-lg text-gray-700">
+    <Card.Content class="flex-1 space-y-4 text-lg text-gray-700">
       <p class="flex justify-between">
         <span class="font-semibold">Game wins:</span>
         {totalGameWins}
@@ -47,6 +71,12 @@
         <span class="font-semibold">Rounds won:</span>
         {totalRoundWins}
       </p>
+      {#if totalAces > 0}
+        <p class="flex justify-between">
+          <span class="font-semibold">Aces:</span>
+          {totalAces} ({aceRate}%)
+        </p>
+      {/if}
       <p class="flex justify-between">
         <span class="font-semibold">Win rate:</span>
         {winRate}%

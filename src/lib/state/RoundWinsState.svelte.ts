@@ -17,3 +17,18 @@ export const getMartinRoundWinsTotal = () =>
 
 export const getArvidRoundWinsTotal = () =>
   gameWins.reduce((total, game) => total + game.arvidRoundWins, 0);
+
+export const getMartinAcesTotal = () =>
+  gameWins.reduce((total, game) => total + game.martinAces, 0);
+
+export const getArvidAcesTotal = () =>
+  gameWins.reduce((total, game) => total + game.arvidAces, 0);
+
+const calculateAceRate = (wins: number, totalAces: number) => {
+  return totalAces > 0 ? Math.round((totalAces / wins) * 100) : 0;
+};
+
+export const getMartinAceRate = () =>
+  calculateAceRate(getMartinRoundWinsTotal(), getMartinAcesTotal());
+export const getArvidAceRate = () =>
+  calculateAceRate(getArvidRoundWinsTotal(), getArvidAcesTotal());

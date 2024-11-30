@@ -7,6 +7,9 @@ export function seedResults(gamesCount: number): GameResults[] {
   let martinWinsTotal = 0;
   let arvidWinsTotal = 0;
 
+  let martinAcesTotal = 0;
+  let arvidAcesTotal = 0;
+
   let wins = [];
 
   for (let i = 0; i < gamesCount; i++) {
@@ -14,10 +17,14 @@ export function seedResults(gamesCount: number): GameResults[] {
     let arvidRoundWins = 0;
 
     while (martinRoundWins < 3 && arvidRoundWins < 3) {
+      let ace = Math.random() < 0.1;
+
       if (Math.random() < 0.5) {
         martinRoundWins++;
+        if (ace) martinAcesTotal++;
       } else {
         arvidRoundWins++;
+        if (ace) arvidAcesTotal++;
       }
     }
 
@@ -27,8 +34,8 @@ export function seedResults(gamesCount: number): GameResults[] {
     const result: GameResults = {
       arvidRoundWins,
       martinRoundWins,
-      arvidAces: 0,
-      martinAces: 0,
+      arvidAces: arvidAcesTotal,
+      martinAces: martinAcesTotal,
       winner: martinRoundWins > arvidRoundWins ? 'martin' : 'arvid',
       dateStamp: getDateStringISO()
     };

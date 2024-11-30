@@ -5,7 +5,11 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import RegisterGameDialog from '$lib/dialogs/RegisterGameDialog.svelte';
   import {
+    getArvidAceRate,
+    getArvidAcesTotal,
     getArvidRoundWinsTotal,
+    getMartinAceRate,
+    getMartinAcesTotal,
     getMartinRoundWins,
     getMartinRoundWinsTotal
   } from '$lib/state/RoundWinsState.svelte';
@@ -30,42 +34,59 @@
     registerGameModalOpen = false;
     addGameResults(results);
   }
+
+  let totalWinChartReady = $state(false);
+  let totalRoundWinsChartReady = $state(false);
 </script>
 
-<main class="flex h-screen flex-col p-4">
+<main class="flex h-screen flex-col overflow-hidden">
   <section class="prose flex items-center gap-4 p-4">
     <Button onclick={registerNewGame}>Register game</Button>
   </section>
-  <section class="flex w-full flex-grow gap-4 overflow-hidden">
+  <section class="relative flex w-full flex-grow gap-4 overflow-hidden">
+    {#if !totalRoundWinsChartReady || !totalWinChartReady}
+      <div
+        class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-80"
+      >
+        Loading... Please wait.
+      </div>
+    {/if}
     <!-- Bar Chart -->
-    <div class="flex-1">
-      <TotalWinChart />
+    <div class="flex-1 shadow-md">
+      <TotalWinChart bind:ready={totalWinChartReady} />
     </div>
     <!-- Line Chart -->
     <div class="flex-1">
-      <RoundWinsChart />
+      <RoundWinsChart bind:ready={totalRoundWinsChartReady} />
     </div>
   </section>
-  <section class="w-full">
-    <h1 class="mb-4 text-2xl font-semibold">Stats</h1>
-    <div class="flex space-x-4">
-      <StatsCard
-        playerName="Martin"
-        totalGameWins={getMartinGameWins()}
-        totalRoundWins={getMartinRoundWinsTotal()}
-        winRate={getMartinWinRate()}
-        leader={getMartinGameWins() > getArvidGameWins()}
-        latestWinner={getLatestGameWinner() === 'martin'}
-      />
-      <StatsCard
-        playerName="Arvid"
-        totalGameWins={getArvidGameWins()}
-        totalRoundWins={getArvidRoundWinsTotal()}
-        winRate={getArvidWinRate()}
-        leader={getArvidGameWins() > getMartinGameWins()}
-        latestWinner={getLatestGameWinner() === 'arvid'}
-      />
-    </div>
+
+  <section class="w-full flex-grow overflow-hidden px-4 pb-8">
+    {#if totalRoundWinsChartReady && totalWinChartReady}
+      <h1 class="mb-4 text-2xl font-semibold">Stats</h1>
+      <div class="flex h-full items-stretch space-x-4 pb-8">
+        <StatsCard
+          playerName="Martin"
+          totalGameWins={getMartinGameWins()}
+          totalRoundWins={getMartinRoundWinsTotal()}
+          totalAces={getMartinAcesTotal()}
+          aceRate={getMartinAceRate()}
+          winRate={getMartinWinRate()}
+          leader={getMartinGameWins() > getArvidGameWins()}
+          latestWinner={getLatestGameWinner() === 'martin'}
+        />
+        <StatsCard
+          playerName="Arvid"
+          totalGameWins={getArvidGameWins()}
+          totalRoundWins={getArvidRoundWinsTotal()}
+          totalAces={getArvidAcesTotal()}
+          aceRate={getArvidAceRate()}
+          winRate={getArvidWinRate()}
+          leader={getArvidGameWins() > getMartinGameWins()}
+          latestWinner={getLatestGameWinner() === 'arvid'}
+        />
+      </div>
+    {/if}
   </section>
 </main>
 

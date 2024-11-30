@@ -20,6 +20,8 @@
   } from 'chart.js';
   import { onMount } from 'svelte';
 
+  let { ready = $bindable() }: { ready: boolean } = $props();
+
   // Register necessary controllers and elements
   Chart.register(
     Tooltip,
@@ -76,7 +78,9 @@
         }
       }
     });
+
+    ready = true;
   });
 </script>
 
-<canvas class="h-full w-full" bind:this={barCanvasRef}></canvas>
+<canvas class="h-full w-full p-6" bind:this={barCanvasRef}></canvas>
