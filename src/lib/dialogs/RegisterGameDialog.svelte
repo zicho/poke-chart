@@ -6,6 +6,7 @@
   import { Label } from '$lib/components/ui/label/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { getDateStringISO } from '$lib/dateUtils';
+  import { currentDate } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
 
   let {
@@ -41,7 +42,7 @@
       | 'arvid';
 
     const results: GameWin = {
-      dateStamp: getDateStringISO(),
+      dateStamp: currentDate.value,
       winner,
       martinRoundWins,
       martinAces,

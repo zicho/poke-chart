@@ -3,6 +3,10 @@ import type { GameWin as GameResults, Winner } from '$lib/types';
 import type { Chart } from 'chart.js';
 import { lineChart } from './RoundWinsState.svelte';
 
+export let currentDate = $state({
+  value: getDateStringISO()
+});
+
 export function seedResults(gamesCount: number): GameResults[] {
   let wins = [];
 
@@ -37,6 +41,8 @@ export function seedResults(gamesCount: number): GameResults[] {
       // Only add a day 50% of the time
       dateStamp: getDateStringISO(i + dayOffset)
     };
+
+    currentDate.value = result.dateStamp;
 
     //@ts-ignore
     wins.push(result);
