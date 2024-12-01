@@ -2,8 +2,7 @@
   import {
     barChart,
     gameWins,
-    getArvidGameWins,
-    getMartinGameWins
+    getGameWinsByDate
   } from '$lib/state/TotalWinState.svelte';
   import { Utils } from '$lib/utils';
   import {
@@ -37,9 +36,17 @@
 
   let barCanvasRef = $state<HTMLCanvasElement>();
 
+  const chartData = getGameWinsByDate();
+
+  const labels = Object.keys(chartData);
+
+  // Step 2: Extract Martin's and Arvid's wins into separate arrays
+  const martinWins = labels.map((date) => chartData[date].martinWins);
+  const arvidWins = labels.map((date) => chartData[date].arvidWins);
+
   let martinGameWins: ChartDataset<'bar'> = {
     label: 'Player 1',
-    data: [getMartinGameWins()],
+    data: martinWins,
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     borderRadius: 10
@@ -47,14 +54,14 @@
 
   let arvidGameWins: ChartDataset<'bar'> = {
     label: 'Player 2',
-    data: [getArvidGameWins()],
+    data: arvidWins,
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     borderRadius: 10
   };
 
   let barChartData: ChartData = {
-    labels: [...new Set(gameWins.map((x) => x.dateStamp))],
+    labels,
     datasets: [martinGameWins, arvidGameWins]
   };
 

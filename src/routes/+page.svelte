@@ -16,10 +16,10 @@
   import {
     addGameResults,
     gameWins,
-    getArvidGameWins,
+    getArvidGameWinsTotal,
     getArvidGameWinRate,
     getLatestGameWinner,
-    getMartinGameWins,
+    getMartinGameWinsTotal,
     getMartinGameWinRate
   } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
@@ -67,22 +67,22 @@
       <div class="flex h-full items-stretch space-x-4 pb-8">
         <StatsCard
           playerName="Player 1"
-          totalGameWins={getMartinGameWins()}
+          totalGameWins={getMartinGameWinsTotal()}
           totalRoundWins={getMartinRoundWinsTotal()}
           totalAces={getMartinAcesTotal()}
           aceRate={getMartinAceRate()}
           winRate={getMartinGameWinRate()}
-          leader={getMartinGameWins() > getArvidGameWins()}
+          leader={getMartinGameWinsTotal() > getArvidGameWinsTotal()}
           latestWinner={getLatestGameWinner() === 'martin'}
         />
         <StatsCard
           playerName="Player 2"
-          totalGameWins={getArvidGameWins()}
+          totalGameWins={getArvidGameWinsTotal()}
           totalRoundWins={getArvidRoundWinsTotal()}
           totalAces={getArvidAcesTotal()}
           aceRate={getArvidAceRate()}
           winRate={getArvidGameWinRate()}
-          leader={getArvidGameWins() > getMartinGameWins()}
+          leader={getArvidGameWinsTotal() > getMartinGameWinsTotal()}
           latestWinner={getLatestGameWinner() === 'arvid'}
         />
       </div>

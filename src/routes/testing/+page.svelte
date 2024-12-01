@@ -20,11 +20,11 @@
   } from '$lib/state/RoundWinsState.svelte';
   import {
     addGameResults,
-    getArvidGameWins,
+    getArvidGameWinsTotal,
     getArvidGameWinRate,
     getLatestGameDate,
     getLatestGameWinner,
-    getMartinGameWins,
+    getMartinGameWinsTotal,
     getMartinGameWinRate,
     getTotalGamesPlayed
   } from '$lib/state/TotalWinState.svelte';
@@ -81,24 +81,24 @@
     {#if totalRoundWinsChartReady && totalWinChartReady}
       <PlayerStatsCard
         playerName="Player 1"
-        totalGameWins={getMartinGameWins()}
+        totalGameWins={getMartinGameWinsTotal()}
         totalRoundWins={getMartinRoundWinsTotal()}
         totalAces={getMartinAcesTotal()}
         aceRate={getMartinAceRate()}
         gameWinRate={getMartinGameWinRate()}
         roundWinRate={getMartinRoundWinRate()}
-        leader={getMartinGameWins() > getArvidGameWins()}
+        leader={getMartinGameWinsTotal() > getArvidGameWinsTotal()}
         latestWinner={getLatestGameWinner() === 'martin'}
       />
       <PlayerStatsCard
         playerName="Player 2"
-        totalGameWins={getArvidGameWins()}
+        totalGameWins={getArvidGameWinsTotal()}
         totalRoundWins={getArvidRoundWinsTotal()}
         totalAces={getArvidAcesTotal()}
         aceRate={getArvidAceRate()}
         gameWinRate={getArvidGameWinRate()}
         roundWinRate={getArvidRoundWinRate()}
-        leader={getArvidGameWins() > getMartinGameWins()}
+        leader={getArvidGameWinsTotal() > getMartinGameWinsTotal()}
         latestWinner={getLatestGameWinner() === 'arvid'}
       />
       <OverallStatsCard

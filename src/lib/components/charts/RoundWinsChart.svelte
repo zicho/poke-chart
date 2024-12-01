@@ -3,8 +3,10 @@
   import {
     getArvidRoundWins,
     getMartinRoundWins,
+    getRoundWinsByDate,
     lineChart
   } from '$lib/state/RoundWinsState.svelte';
+  import { gameWins } from '$lib/state/TotalWinState.svelte';
   import { Utils } from '$lib/utils';
   import {
     BarController,
@@ -35,9 +37,23 @@
 
   let barCanvasRef = $state<HTMLCanvasElement>();
 
+  const chartData = gameWins.map((x) => ({
+    dateStamp: x.dateStamp,
+    martinRoundWins: x.martinRoundWins,
+    arvidRoundWins: x.arvidRoundWins
+  }));
+
+  console.dir(chartData);
+
+  const labels = chartData.map((x) => x.dateStamp);
+
+  // Step 2: Extract Martin's and Arvid's wins into separate arrays
+  const martinWins = chartData.map((x) => x.martinRoundWins);
+  const arvidWins = chartData.map((x) => x.arvidRoundWins);
+
   let martinRoundWins: ChartDataset<'bar'> = {
     label: 'Player 1',
-    data: getMartinRoundWins(),
+    data: martinWins,
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     borderWidth: 1,
@@ -46,7 +62,7 @@
 
   let arvidRoundWins: ChartDataset<'bar'> = {
     label: 'Player 2',
-    data: getArvidRoundWins(),
+    data: arvidWins,
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     borderWidth: 1,
@@ -58,7 +74,7 @@
   };
 
   let barChartData: ChartData<'bar'> = {
-    labels: generateLabels(martinRoundWins.data.length),
+    labels,
     datasets: [martinRoundWins, arvidRoundWins]
   };
 

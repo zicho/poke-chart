@@ -25,13 +25,17 @@ export function seedResults(gamesCount: number): GameResults[] {
       }
     }
 
+    // Determine whether to add a day with 50% chance
+    const dayOffset = Math.random() < 0.5 ? 1 : 0;
+
     const result: GameResults = {
       arvidRoundWins,
       martinRoundWins,
       arvidAces,
       martinAces,
       winner: martinRoundWins > arvidRoundWins ? 'martin' : 'arvid',
-      dateStamp: getDateStringISO()
+      // Only add a day 50% of the time
+      dateStamp: getDateStringISO(i + dayOffset)
     };
 
     //@ts-ignore
@@ -51,10 +55,39 @@ export let barChart = $state<ChartWrapper>({
 
 export let gameWins = $state<GameResults[]>(seedResults(10));
 
-export const getMartinGameWins = () =>
-  gameWins.filter((x) => x.winner === 'martin').length;
+export const getGameWinsByDate = () => {
+  const groupedWins = gameWins.reduce(
+    (acc, item) => {
+      // If the date is not already in the accumulator, initialize it
+      if (!acc[item.dateStamp]) {
+        acc[item.dateStamp] = {
+          martinWins: 0,
+          arvidWins: 0
+        };
+      }
+
+      // Increment the win count for the winner
+      if (item.winner === 'martin') {
+        acc[item.dateStamp].martinWins++;
+      } else if (item.winner === 'arvid') {
+        acc[item.dateStamp].arvidWins++;
+      }
+
+      return acc;
+    },
+    {} as Record<string, { martinWins: number; arvidWins: number }>
+  );
+
+  return groupedWins;
+};
 
 export const getArvidGameWins = () =>
+  gameWins.filter((x) => x.winner === 'arvid');
+
+export const getMartinGameWinsTotal = () =>
+  gameWins.filter((x) => x.winner === 'martin').length;
+
+export const getArvidGameWinsTotal = () =>
   gameWins.filter((x) => x.winner === 'arvid').length;
 
 export function addGameResults(results: GameResults) {
@@ -108,8 +141,10 @@ export function addGameResults(results: GameResults) {
   barChart.ref.update();
 }
 
-export const getMartinGameWinRate = () => calculateWinRate(getMartinGameWins());
-export const getArvidGameWinRate = () => calculateWinRate(getArvidGameWins());
+export const getMartinGameWinRate = () =>
+  calculateWinRate(getMartinGameWinsTotal());
+export const getArvidGameWinRate = () =>
+  calculateWinRate(getArvidGameWinsTotal());
 
 const calculateWinRate = (wins: number) => {
   const totalGames = gameWins.length;
