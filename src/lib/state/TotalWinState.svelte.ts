@@ -59,7 +59,7 @@ export let barChart = $state<ChartWrapper>({
   ref: undefined
 });
 
-export let gameWins = $state<GameResults[]>(seedResults(10));
+export let gameWins = $state<GameResults[]>(seedResults(20));
 
 export const getGameWinsByDate = () => {
   const groupedWins = gameWins.reduce(
