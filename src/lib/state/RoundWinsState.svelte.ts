@@ -53,3 +53,13 @@ export const getTotalAces = () => {
 
 export const getTotalAceRate = () =>
   calculateAceRate(getTotalRoundsPlayed(), getTotalAces());
+
+const calculateRoundWinRate = (wins: number) => {
+  const totalRounds = getTotalRoundsPlayed();
+  return totalRounds > 0 ? Math.round((wins / totalRounds) * 100) : 0;
+};
+
+export const getMartinRoundWinRate = () =>
+  calculateRoundWinRate(getMartinRoundWinsTotal());
+export const getArvidRoundWinRate = () =>
+  calculateRoundWinRate(getArvidRoundWinsTotal());

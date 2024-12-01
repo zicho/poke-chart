@@ -4,38 +4,32 @@ import type { Chart } from 'chart.js';
 import { lineChart } from './RoundWinsState.svelte';
 
 export function seedResults(gamesCount: number): GameResults[] {
-  let martinWinsTotal = 0;
-  let arvidWinsTotal = 0;
-
-  let martinAcesTotal = 0;
-  let arvidAcesTotal = 0;
-
   let wins = [];
 
   for (let i = 0; i < gamesCount; i++) {
     let martinRoundWins = 0;
     let arvidRoundWins = 0;
 
+    let martinAces = 0;
+    let arvidAces = 0;
+
     while (martinRoundWins < 3 && arvidRoundWins < 3) {
       let ace = Math.random() < 0.05;
 
       if (Math.random() < 0.5) {
         martinRoundWins++;
-        if (ace) martinAcesTotal++;
+        if (ace) martinAces++;
       } else {
         arvidRoundWins++;
-        if (ace) arvidAcesTotal++;
+        if (ace) arvidAces++;
       }
     }
-
-    martinWinsTotal += martinRoundWins;
-    arvidWinsTotal += arvidRoundWins;
 
     const result: GameResults = {
       arvidRoundWins,
       martinRoundWins,
-      arvidAces: arvidAcesTotal,
-      martinAces: martinAcesTotal,
+      arvidAces,
+      martinAces,
       winner: martinRoundWins > arvidRoundWins ? 'martin' : 'arvid',
       dateStamp: getDateStringISO()
     };
@@ -55,7 +49,7 @@ export let barChart = $state<ChartWrapper>({
   ref: undefined
 });
 
-export let gameWins = $state<GameResults[]>(seedResults(5));
+export let gameWins = $state<GameResults[]>(seedResults(10));
 
 export const getMartinGameWins = () =>
   gameWins.filter((x) => x.winner === 'martin').length;
@@ -114,8 +108,8 @@ export function addGameResults(results: GameResults) {
   barChart.ref.update();
 }
 
-export const getMartinWinRate = () => calculateWinRate(getMartinGameWins());
-export const getArvidWinRate = () => calculateWinRate(getArvidGameWins());
+export const getMartinGameWinRate = () => calculateWinRate(getMartinGameWins());
+export const getArvidGameWinRate = () => calculateWinRate(getArvidGameWins());
 
 const calculateWinRate = (wins: number) => {
   const totalGames = gameWins.length;

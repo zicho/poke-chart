@@ -15,7 +15,8 @@
     totalGameWins: number;
     totalRoundWins: number;
     totalAces: number;
-    winRate: number;
+    gameWinRate: number;
+    roundWinRate: number;
     aceRate: number;
     leader: boolean;
     latestWinner: boolean;
@@ -26,7 +27,8 @@
     totalGameWins,
     totalRoundWins,
     totalAces,
-    winRate,
+    gameWinRate,
+    roundWinRate,
     aceRate,
     leader = $bindable(),
     latestWinner = $bindable()
@@ -89,8 +91,12 @@
         </p>
       {/if}
       <p class="flex justify-between">
-        <span class="font-semibold">Win rate:</span>
-        {winRate}%
+        <span class="font-semibold">Game win rate:</span>
+        {gameWinRate}%
+      </p>
+      <p class="flex justify-between">
+        <span class="font-semibold">Round win rate:</span>
+        {roundWinRate}%
       </p>
     </Card.Content>
   </Card.Root>

@@ -17,10 +17,10 @@
     addGameResults,
     gameWins,
     getArvidGameWins,
-    getArvidWinRate,
+    getArvidGameWinRate,
     getLatestGameWinner,
     getMartinGameWins,
-    getMartinWinRate
+    getMartinGameWinRate
   } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
 
@@ -71,7 +71,7 @@
           totalRoundWins={getMartinRoundWinsTotal()}
           totalAces={getMartinAcesTotal()}
           aceRate={getMartinAceRate()}
-          winRate={getMartinWinRate()}
+          winRate={getMartinGameWinRate()}
           leader={getMartinGameWins() > getArvidGameWins()}
           latestWinner={getLatestGameWinner() === 'martin'}
         />
@@ -81,7 +81,7 @@
           totalRoundWins={getArvidRoundWinsTotal()}
           totalAces={getArvidAcesTotal()}
           aceRate={getArvidAceRate()}
-          winRate={getArvidWinRate()}
+          winRate={getArvidGameWinRate()}
           leader={getArvidGameWins() > getMartinGameWins()}
           latestWinner={getLatestGameWinner() === 'arvid'}
         />

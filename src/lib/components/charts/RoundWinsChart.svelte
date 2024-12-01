@@ -13,9 +13,6 @@
     Chart,
     Legend,
     LinearScale,
-    LineController,
-    LineElement,
-    PointElement,
     Title,
     Tooltip,
     type ChartData,
@@ -33,52 +30,42 @@
     BarController,
     BarElement,
     CategoryScale,
-    LinearScale,
-    LineController,
-    LineElement,
-    PointElement
+    LinearScale
   );
 
-  let lineCanvasRef = $state<HTMLCanvasElement>();
+  let barCanvasRef = $state<HTMLCanvasElement>();
 
-  let opts = {
-    fill: false,
-    pointStyle: 'circle',
-    pointRadius: 5,
-    pointHoverRadius: 10,
-    cursor: 'pointer',
-    tension: 0.15
-  };
-
-  let martinRoundWins: ChartDataset<'line'> = {
+  let martinRoundWins: ChartDataset<'bar'> = {
     label: 'Player 1',
     data: getMartinRoundWins(),
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
-    ...opts
+    borderWidth: 1,
+    borderRadius: 10
   };
 
-  let arvidRoundWins: ChartDataset<'line'> = {
+  let arvidRoundWins: ChartDataset<'bar'> = {
     label: 'Player 2',
     data: getArvidRoundWins(),
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
-    ...opts
+    borderWidth: 1,
+    borderRadius: 10
   };
 
   const generateLabels = (length: number): string[] => {
-    return Array.from({ length }, () => getDateStringISO());
+    return Array.from({ length }, (_, i) => getDateStringISO());
   };
 
-  let lineChartData: ChartData = {
+  let barChartData: ChartData<'bar'> = {
     labels: generateLabels(martinRoundWins.data.length),
     datasets: [martinRoundWins, arvidRoundWins]
   };
 
   onMount(() => {
-    lineChart.ref = new Chart(lineCanvasRef as HTMLCanvasElement, {
-      type: 'line',
-      data: lineChartData,
+    lineChart.ref = new Chart(barCanvasRef as HTMLCanvasElement, {
+      type: 'bar',
+      data: barChartData,
       options: {
         plugins: {
           tooltip: {
@@ -89,13 +76,13 @@
                 return `${label}: ${value} wins`;
               },
               title: function (tooltipItem) {
-                return `Game played at ${tooltipItem[0].label}`;
+                return tooltipItem[0].label; // Label for the round
               }
             }
           },
           title: {
             display: true,
-            text: 'Rounds won',
+            text: 'Rounds won per game',
             font: {
               size: 18,
               weight: 'bold'
@@ -117,17 +104,17 @@
         responsive: true,
         scales: {
           x: {
-            type: 'category'
+            stacked: true
           },
           y: {
-            type: 'linear',
-            beginAtZero: false,
+            stacked: true,
+            beginAtZero: true,
             ticks: { stepSize: 1 },
             title: {
               display: true,
-              text: 'Rounds won per game',
+              text: 'Wins',
               font: {
-                size: 18,
+                size: 16,
                 weight: 'bold'
               }
             }
@@ -140,4 +127,4 @@
   });
 </script>
 
-<canvas class="h-full w-full p-6" bind:this={lineCanvasRef}></canvas>
+<canvas class="h-full w-full p-6" bind:this={barCanvasRef}></canvas>

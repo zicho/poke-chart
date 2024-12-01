@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { getDateStringISO } from '$lib/dateUtils';
   import {
     barChart,
     gameWins,

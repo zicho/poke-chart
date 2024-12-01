@@ -8,9 +8,11 @@
   import {
     getArvidAceRate,
     getArvidAcesTotal,
+    getArvidRoundWinRate,
     getArvidRoundWinsTotal,
     getMartinAceRate,
     getMartinAcesTotal,
+    getMartinRoundWinRate,
     getMartinRoundWinsTotal,
     getTotalAceRate,
     getTotalAces,
@@ -19,11 +21,11 @@
   import {
     addGameResults,
     getArvidGameWins,
-    getArvidWinRate,
+    getArvidGameWinRate,
     getLatestGameDate,
     getLatestGameWinner,
     getMartinGameWins,
-    getMartinWinRate,
+    getMartinGameWinRate,
     getTotalGamesPlayed
   } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
@@ -58,7 +60,7 @@
       variant="default"
       onclick={registerNewGame}
       aria-label="Register new game"
-      ><Plus /><Label class="font-semibold">Register game</Label></Button
+      ><Plus /><span class="font-semibold">Register game</span></Button
     >
   </section>
 
@@ -83,7 +85,8 @@
         totalRoundWins={getMartinRoundWinsTotal()}
         totalAces={getMartinAcesTotal()}
         aceRate={getMartinAceRate()}
-        winRate={getMartinWinRate()}
+        gameWinRate={getMartinGameWinRate()}
+        roundWinRate={getMartinRoundWinRate()}
         leader={getMartinGameWins() > getArvidGameWins()}
         latestWinner={getLatestGameWinner() === 'martin'}
       />
@@ -93,7 +96,8 @@
         totalRoundWins={getArvidRoundWinsTotal()}
         totalAces={getArvidAcesTotal()}
         aceRate={getArvidAceRate()}
-        winRate={getArvidWinRate()}
+        gameWinRate={getArvidGameWinRate()}
+        roundWinRate={getArvidRoundWinRate()}
         leader={getArvidGameWins() > getMartinGameWins()}
         latestWinner={getLatestGameWinner() === 'arvid'}
       />
