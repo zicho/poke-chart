@@ -43,8 +43,6 @@
     arvidRoundWins: x.arvidRoundWins
   }));
 
-  console.dir(chartData);
-
   const labels = chartData.map((x) => x.dateStamp);
 
   // Step 2: Extract Martin's and Arvid's wins into separate arrays

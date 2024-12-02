@@ -2,7 +2,6 @@
   import RoundWinsChart from '$lib/components/charts/RoundWinsChart.svelte';
   import TotalWinChart from '$lib/components/charts/TotalWinChart.svelte';
   import PlayerStatsCard from '$lib/components/PlayerStatsCard.svelte';
-  import RegisterGameDialog from '$lib/dialogs/RegisterGameDialog.svelte';
   import * as Card from '$lib/components/ui/card';
   import {
     getArvidAceRate,
@@ -18,7 +17,6 @@
     getTotalRoundsPlayed
   } from '$lib/state/RoundWinsState.svelte';
   import {
-    addGameResults,
     getArvidGameWinsTotal,
     getArvidGameWinRate,
     getLatestGameDate,
@@ -27,20 +25,7 @@
     getMartinGameWinRate,
     getTotalGamesPlayed
   } from '$lib/state/TotalWinState.svelte';
-  import type { GameWin } from '$lib/types';
   import OverallStatsCard from '$lib/components/OverallStatsCard.svelte';
-
-  let registerGameModalOpen = $state(false);
-
-  function registerNewGame() {
-    registerGameModalOpen = false;
-    registerGameModalOpen = true;
-  }
-
-  function onSaveResults(results: GameWin): void {
-    registerGameModalOpen = false;
-    addGameResults(results);
-  }
 
   let totalWinChartReady = $state(false);
   let totalRoundWinsChartReady = $state(false);
@@ -98,5 +83,3 @@
     </div>
   {/if}
 </section>
-
-<RegisterGameDialog open={registerGameModalOpen} onSave={onSaveResults} />
