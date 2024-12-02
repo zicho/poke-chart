@@ -26,55 +26,40 @@
     getTotalGamesPlayed
   } from '$lib/state/TotalWinState.svelte';
   import OverallStatsCard from '$lib/components/OverallStatsCard.svelte';
+  import PlayerStatsCardAlt from '$lib/components/PlayerStatsCardAlt.svelte';
+  import TimelineChart from '$lib/components/TimelineChart.svelte';
 
   let totalWinChartReady = $state(false);
   let totalRoundWinsChartReady = $state(false);
 </script>
 
-<section class="mb-4 flex flex-1 space-x-4">
-  <div class="flex-1">
-    <Card.Root>
-      <TotalWinChart bind:ready={totalWinChartReady} />
-    </Card.Root>
-  </div>
-  <div class="flex-1">
-    <Card.Root>
-      <RoundWinsChart bind:ready={totalRoundWinsChartReady} />
-    </Card.Root>
-  </div>
+<section class="mb-4 flex flex-1 space-x-4 overflow-hidden">
+  <Card.Root class="h-full w-full">
+    <TotalWinChart bind:ready={totalWinChartReady} />
+  </Card.Root>
+  <Card.Root class="h-full w-full">
+    <RoundWinsChart bind:ready={totalRoundWinsChartReady} />
+  </Card.Root>
 </section>
 
-<section class="flex flex-1 space-x-4">
+<section class="flex flex-1 space-x-4 overflow-hidden">
   {#if totalRoundWinsChartReady && totalWinChartReady}
-    <PlayerStatsCard
-      playerName="Player 1"
-      totalGameWins={getMartinGameWinsTotal()}
-      totalRoundWins={getMartinRoundWinsTotal()}
-      totalAces={getMartinAcesTotal()}
-      aceRate={getMartinAceRate()}
-      gameWinRate={getMartinGameWinRate()}
-      roundWinRate={getMartinRoundWinRate()}
-      leader={getMartinGameWinsTotal() > getArvidGameWinsTotal()}
-      latestWinner={getLatestGameWinner() === 'martin'}
-    />
-    <PlayerStatsCard
-      playerName="Player 2"
-      totalGameWins={getArvidGameWinsTotal()}
-      totalRoundWins={getArvidRoundWinsTotal()}
-      totalAces={getArvidAcesTotal()}
-      aceRate={getArvidAceRate()}
-      gameWinRate={getArvidGameWinRate()}
-      roundWinRate={getArvidRoundWinRate()}
-      leader={getArvidGameWinsTotal() > getMartinGameWinsTotal()}
-      latestWinner={getLatestGameWinner() === 'arvid'}
-    />
-    <OverallStatsCard
-      totalGamesPlayed={getTotalGamesPlayed()}
-      totalRoundsPlayed={getTotalRoundsPlayed()}
-      totalAces={getTotalAces()}
-      aceRate={getTotalAceRate()}
-      lastGamePlayed={getLatestGameDate()}
-    />
+    <div class="flex flex-1 space-x-4">
+      <PlayerStatsCardAlt />
+
+      <OverallStatsCard
+        totalGamesPlayed={getTotalGamesPlayed()}
+        totalRoundsPlayed={getTotalRoundsPlayed()}
+        totalAces={getTotalAces()}
+        aceRate={getTotalAceRate()}
+        lastGamePlayed={getLatestGameDate()}
+      />
+    </div>
+    <div class="flex-1">
+      <Card.Root class="h-full w-full">
+        <TimelineChart bind:ready={totalRoundWinsChartReady} />
+      </Card.Root>
+    </div>
   {:else}
     <div
       class="absolute inset-0 z-10 flex items-center justify-center bg-white"

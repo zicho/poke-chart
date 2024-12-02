@@ -3,12 +3,12 @@ import type { GameWin as GameResults, Winner } from '$lib/types';
 import type { Chart } from 'chart.js';
 import { lineChart } from './RoundWinsState.svelte';
 
-export let currentDate = $state({
+export const currentDate = $state({
   value: getDateStringISO()
 });
 
 export function seedResults(gamesCount: number): GameResults[] {
-  let wins = [];
+  const wins = [];
 
   for (let i = 0; i < gamesCount; i++) {
     let martinRoundWins = 0;
@@ -18,7 +18,7 @@ export function seedResults(gamesCount: number): GameResults[] {
     let arvidAces = 0;
 
     while (martinRoundWins < 3 && arvidRoundWins < 3) {
-      let ace = Math.random() < 0.05;
+      const ace = Math.random() < 0.05;
 
       if (Math.random() < 0.5) {
         martinRoundWins++;
@@ -44,7 +44,6 @@ export function seedResults(gamesCount: number): GameResults[] {
 
     currentDate.value = result.dateStamp;
 
-    //@ts-ignore
     wins.push(result);
   }
 
@@ -55,11 +54,11 @@ type ChartWrapper = {
   ref?: Chart;
 };
 
-export let barChart = $state<ChartWrapper>({
+export const barChart = $state<ChartWrapper>({
   ref: undefined
 });
 
-export let gameWins = $state<GameResults[]>(seedResults(20));
+export const gameWins = $state<GameResults[]>(seedResults(10));
 
 export const getGameWinsByDate = () => {
   const groupedWins = gameWins.reduce(

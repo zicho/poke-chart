@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { getRoundWinsByDate } from '$lib/state/RoundWinsState.svelte';
   import {
-    barChart,
+    barChart as lineChart,
     gameWins,
     getGameWinsByDate
   } from '$lib/state/TotalWinState.svelte';
@@ -34,40 +35,93 @@
     PointElement
   );
 
-  let barCanvasRef = $state<HTMLCanvasElement>();
+  let canvasRef = $state<HTMLCanvasElement>();
 
-  const chartData = getGameWinsByDate();
+  const gameWinsData = getGameWinsByDate();
+  const roundWinsData = getRoundWinsByDate();
 
-  const labels = Object.keys(chartData);
+  const sortedDates = Object.keys(gameWinsData).sort();
 
-  // Step 2: Extract Martin's and Arvid's wins into separate arrays
-  const martinWins = labels.map((date) => chartData[date].martinWins);
-  const arvidWins = labels.map((date) => chartData[date].arvidWins);
+  let martinGameTotal = 0;
+  let arvidGameTotal = 0;
 
-  let martinGameWins: ChartDataset<'line'> = {
-    label: 'Player 1',
-    data: martinWins,
+  const cumulativeGameData = sortedDates.map((date) => {
+    martinGameTotal += gameWinsData[date].martinWins;
+    arvidGameTotal += gameWinsData[date].arvidWins;
+
+    return {
+      date,
+      martinGameTotal,
+      arvidGameTotal
+    };
+  });
+
+  let martinRoundTotal = 0;
+  let arvidRoundTotal = 0;
+
+  const cumulativeRoundData = sortedDates.map((date) => {
+    martinRoundTotal += roundWinsData[date].martinRoundWins;
+    arvidRoundTotal += roundWinsData[date].arvidRoundWins;
+
+    return {
+      date,
+      martinRoundTotal,
+      arvidRoundTotal
+    };
+  });
+
+  const tension = 0.1;
+  const borderDash = [5, 5];
+
+  let martinGameWinsDataset: ChartDataset<'line'> = {
+    label: 'Player 1 - Game Wins',
+    data: cumulativeGameData.map((x) => x.martinGameTotal),
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
-    tension: 0.1
+    tension
   };
 
-  let arvidGameWins: ChartDataset<'line'> = {
-    label: 'Player 2',
-    data: arvidWins,
+  let martinRoundWinsDataset: ChartDataset<'line'> = {
+    label: 'Player 1 - Round Wins',
+    data: cumulativeRoundData.map((x) => x.martinRoundTotal),
+    borderColor: Utils.CHART_COLORS.red,
+    backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
+    borderDash,
+    tension,
+    yAxisID: 'y2' // Link this dataset to the secondary Y-axis
+  };
+
+  let arvidGameWinsDataset: ChartDataset<'line'> = {
+    label: 'Player 2 - Game Wins',
+    data: cumulativeGameData.map((x) => x.arvidGameTotal),
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
-    tension: 0.1
+    tension
+  };
+
+  let arvidRoundWinsDataset: ChartDataset<'line'> = {
+    label: 'Player 2 - Round Wins',
+    data: cumulativeRoundData.map((x) => x.arvidRoundTotal),
+    borderColor: Utils.CHART_COLORS.green,
+    backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
+    borderDash,
+    tension,
+    yAxisID: 'y2' // Link this dataset to the secondary Y-axis
   };
 
   let lineChartData: ChartData = {
-    labels,
-    datasets: [martinGameWins, arvidGameWins]
+    labels: sortedDates,
+    datasets: [
+      martinGameWinsDataset,
+      martinRoundWinsDataset,
+      arvidGameWinsDataset,
+      arvidRoundWinsDataset
+    ]
   };
 
   onMount(() => {
-    // Bar Chart Initialization
-    barChart.ref = new Chart(barCanvasRef as HTMLCanvasElement, {
+    // Line Chart Initialization with Multiple Y-Axes
+    lineChart.ref = new Chart(canvasRef as HTMLCanvasElement, {
       type: 'line',
       data: lineChartData,
       options: {
@@ -83,7 +137,21 @@
             ticks: { stepSize: 1 },
             title: {
               display: true,
-              text: 'Total wins per day',
+              text: 'Game Wins',
+              font: {
+                size: 18,
+                weight: 'bold'
+              }
+            }
+          },
+          y2: {
+            type: 'linear',
+            position: 'right',
+            beginAtZero: true,
+            ticks: { stepSize: 1 },
+            title: {
+              display: true,
+              text: 'Round Wins',
               font: {
                 size: 18,
                 weight: 'bold'
@@ -94,7 +162,7 @@
         plugins: {
           title: {
             display: true,
-            text: 'Games won',
+            text: 'Games won timeline',
             font: {
               size: 18,
               weight: 'bold'
@@ -105,10 +173,10 @@
           },
           legend: {
             display: true,
-            position: 'bottom', // Adjust legend position if needed
+            position: 'bottom',
             labels: {
               font: {
-                size: 18 // Customize font size
+                size: 18
               }
             }
           }
@@ -120,4 +188,4 @@
   });
 </script>
 
-<canvas class="h-full w-full p-6" bind:this={barCanvasRef}></canvas>
+<canvas class="h-full w-full p-6" bind:this={canvasRef}></canvas>

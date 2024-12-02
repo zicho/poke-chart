@@ -35,15 +35,16 @@
 {/snippet}
 
 <main class="flex h-screen flex-col bg-neutral-200 px-4 pb-4">
-  <menu class="flex h-16 items-center space-x-2">
+  <menu class="flex h-16 items-center space-x-4">
     <Button
       variant="default"
       onclick={registerNewGame}
       aria-label="Register new game"
-      ><Plus /><span class="font-semibold">Register game</span></Button
     >
+      <Plus /><span class="font-semibold">Register game</span>
+    </Button>
 
-    <nav class="flex h-5 items-center space-x-2">
+    <nav class="flex h-5 items-center space-x-4">
       <Separator orientation="vertical" class="bg-neutral-500" />
       {@render menuNavItem('Dashboard', '/')}
       {@render menuNavItem('Timeline', '/timeline')}
