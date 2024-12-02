@@ -1,10 +1,6 @@
 <script lang="ts">
   import { getRoundWinsByDate } from '$lib/state/RoundWinsState.svelte';
-  import {
-    barChart as lineChart,
-    gameWins,
-    getGameWinsByDate
-  } from '$lib/state/TotalWinState.svelte';
+  import { getGameWinsByDate } from '$lib/state/TotalWinState.svelte';
   import { Utils } from '$lib/utils';
   import {
     BarController,
@@ -20,6 +16,7 @@
     type ChartDataset
   } from 'chart.js';
   import { onMount } from 'svelte';
+  import Button from './ui/button/button.svelte';
 
   let { ready = $bindable() }: { ready: boolean } = $props();
 
@@ -44,6 +41,8 @@
 
   let martinGameTotal = 0;
   let arvidGameTotal = 0;
+
+  let mode = $state<'all' | 'games' | 'rounds'>('all');
 
   const cumulativeGameData = sortedDates.map((date) => {
     martinGameTotal += gameWinsData[date].martinWins;
@@ -109,19 +108,42 @@
     yAxisID: 'y2' // Link this dataset to the secondary Y-axis
   };
 
+  let datasets = [
+    martinGameWinsDataset,
+    martinRoundWinsDataset,
+    arvidGameWinsDataset,
+    arvidRoundWinsDataset
+  ];
+
+  $effect(() => {
+    if (!lineChart) return;
+
+    if (mode === 'all') {
+      lineChart.data.datasets = [
+        martinGameWinsDataset,
+        martinRoundWinsDataset,
+        arvidGameWinsDataset,
+        arvidRoundWinsDataset
+      ];
+    } else if (mode === 'games') {
+      lineChart.data.datasets = [martinGameWinsDataset, arvidGameWinsDataset];
+    } else {
+      lineChart.data.datasets = [martinRoundWinsDataset, arvidRoundWinsDataset];
+    }
+
+    lineChart?.update();
+  });
+
   let lineChartData: ChartData = {
     labels: sortedDates,
-    datasets: [
-      martinGameWinsDataset,
-      martinRoundWinsDataset,
-      arvidGameWinsDataset,
-      arvidRoundWinsDataset
-    ]
+    datasets
   };
+
+  let lineChart = $state<Chart>();
 
   onMount(() => {
     // Line Chart Initialization with Multiple Y-Axes
-    lineChart.ref = new Chart(canvasRef as HTMLCanvasElement, {
+    lineChart = new Chart(canvasRef as HTMLCanvasElement, {
       type: 'line',
       data: lineChartData,
       options: {
@@ -162,7 +184,7 @@
         plugins: {
           title: {
             display: true,
-            text: 'Games won timeline',
+            text: 'Game & round wins timeline',
             font: {
               size: 18,
               weight: 'bold'
@@ -188,4 +210,24 @@
   });
 </script>
 
-<canvas class="h-full w-full p-6" bind:this={canvasRef}></canvas>
+<div class="box-border flex h-full w-full flex-col justify-between p-6 pb-16">
+  <canvas bind:this={canvasRef} class="flex-grow"></canvas>
+
+  <div class="flex space-x-4">
+    <Button
+      onclick={() => (mode = 'all')}
+      variant={mode === 'all' ? 'default' : 'outline'}
+      class="mt-4 flex-1">All data</Button
+    >
+    <Button
+      onclick={() => (mode = 'games')}
+      variant={mode === 'games' ? 'default' : 'outline'}
+      class="mt-4 flex-1">Game data</Button
+    >
+    <Button
+      onclick={() => (mode = 'rounds')}
+      variant={mode === 'rounds' ? 'default' : 'outline'}
+      class="mt-4 flex-1">Round data</Button
+    >
+  </div>
+</div>

@@ -44,11 +44,11 @@
       <Plus /><span class="font-semibold">Register game</span>
     </Button>
 
-    <nav class="flex h-5 items-center space-x-4">
+    <!-- <nav class="flex h-5 items-center space-x-4">
       <Separator orientation="vertical" class="bg-neutral-500" />
       {@render menuNavItem('Dashboard', '/')}
       {@render menuNavItem('Timeline', '/timeline')}
-    </nav>
+    </nav> -->
   </menu>
   {@render children()}
 </main>
