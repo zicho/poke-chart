@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { dataInterval } from '$lib/state/AppState.svelte';
   import {
     barChart,
     gameWins,
     getGameWinsByDate
   } from '$lib/state/TotalWinState.svelte';
   import { Utils } from '$lib/utils';
+  import { getLocalTimeZone } from '@internationalized/date';
   import {
     BarController,
     BarElement,
@@ -59,6 +61,18 @@
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     borderRadius: 10
   };
+
+  const date1 = new Date(dataInterval.from.toDate(getLocalTimeZone()));
+  const date2 = new Date(dataInterval.to.toDate(getLocalTimeZone()));
+
+  console.dir(date1);
+
+  const filteredLabels = labels.filter((x) => {
+    const date = new Date(x); // Convert the string to a Date object
+    return date >= date1 && date <= date2; // Check if it's in the range
+  });
+
+  console.dir(filteredLabels);
 
   let barChartData: ChartData = {
     labels,

@@ -103,7 +103,7 @@
 <article class="h-full w-full flex-grow rounded-lg">
   <Card.Root class="flex h-full flex-col rounded-lg shadow-md">
     <Card.Content class="flex-1 space-y-4 text-lg text-gray-700">
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-3 gap-2">
         <div class="flex items-center justify-start space-x-2 text-left">
           <p class="font-semibold">{player1.playerName}</p>
           {#if player1.latestGameWinner}{@render latestWinner()}{/if}

@@ -7,6 +7,10 @@
   import RegisterGameDialog from '$lib/dialogs/RegisterGameDialog.svelte';
   import { addGameResults } from '$lib/state/TotalWinState.svelte';
   import type { GameWin } from '$lib/types';
+  import { Input } from '$lib/components/ui/input';
+  import { Label } from '$lib/components/ui/label';
+  import { dataInterval } from '$lib/state/AppState.svelte';
+  import DatePicker from '$lib/components/DatePicker.svelte';
 
   let { children } = $props();
 
@@ -43,6 +47,13 @@
     >
       <Plus /><span class="font-semibold">Register game</span>
     </Button>
+    <div class="flex h-5 items-center space-x-4">
+      <Separator orientation="vertical" class="bg-neutral-500" />
+      <Label>Data from</Label>
+      <DatePicker value={dataInterval.from} />
+      <Label>to</Label>
+      <DatePicker value={dataInterval.to} />
+    </div>
 
     <!-- <nav class="flex h-5 items-center space-x-4">
       <Separator orientation="vertical" class="bg-neutral-500" />

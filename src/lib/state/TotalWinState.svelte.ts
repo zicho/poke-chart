@@ -2,10 +2,8 @@ import { getDateStringISO } from '$lib/dateUtils';
 import type { GameWin as GameResults, Winner } from '$lib/types';
 import type { Chart } from 'chart.js';
 import { lineChart } from './RoundWinsState.svelte';
-
-export const currentDate = $state({
-  value: getDateStringISO()
-});
+import { currentDate, dataInterval } from './AppState.svelte';
+import { getLocalTimeZone } from '@internationalized/date';
 
 export function seedResults(gamesCount: number): GameResults[] {
   const wins = [];
@@ -60,8 +58,20 @@ export const barChart = $state<ChartWrapper>({
 
 export const gameWins = $state<GameResults[]>(seedResults(10));
 
+export const filteredWins = (() => {
+  const from = new Date(dataInterval.from.toDate(getLocalTimeZone()));
+  const to = new Date(dataInterval.to.toDate(getLocalTimeZone()));
+
+  const filteredGames = gameWins.filter((x) => {
+    const date = new Date(x.dateStamp);
+    return date >= from && date <= to; // Check if it's in the range
+  });
+
+  return filteredGames;
+})();
+
 export const getGameWinsByDate = () => {
-  const groupedWins = gameWins.reduce(
+  const groupedWins = filteredWins.reduce(
     (acc, item) => {
       // If the date is not already in the accumulator, initialize it
       if (!acc[item.dateStamp]) {
