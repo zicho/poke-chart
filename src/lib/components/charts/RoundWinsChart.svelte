@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getDateStringISO } from '$lib/dateUtils';
   import {
-    getArvidRoundWins,
-    getMartinRoundWins,
+    getPlayerTwoRoundWins,
+    getPlayerOneRoundWins,
     getRoundWinsByDate,
     lineChart
   } from '$lib/state/RoundWinsState.svelte';
@@ -39,28 +39,28 @@
 
   const chartData = gameWins.map((x) => ({
     dateStamp: x.dateStamp,
-    martinRoundWins: x.martinRoundWins,
-    arvidRoundWins: x.arvidRoundWins
+    playerOneRoundWins: x.playerOneRoundWins,
+    playerTwoRoundWins: x.playerTwoRoundWins
   }));
 
   const labels = chartData.map((x) => x.dateStamp);
 
-  // Step 2: Extract Martin's and Arvid's wins into separate arrays
-  const martinWins = chartData.map((x) => x.martinRoundWins);
-  const arvidWins = chartData.map((x) => x.arvidRoundWins);
+  // Step 2: Extract PlayerOne's and PlayerTwo's wins into separate arrays
+  const playerOneWins = chartData.map((x) => x.playerOneRoundWins);
+  const playerTwoWins = chartData.map((x) => x.playerTwoRoundWins);
 
-  let martinRoundWins: ChartDataset<'bar'> = {
+  let playerOneRoundWins: ChartDataset<'bar'> = {
     label: 'Player 1',
-    data: martinWins,
+    data: playerOneWins,
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     borderWidth: 1,
     borderRadius: 10
   };
 
-  let arvidRoundWins: ChartDataset<'bar'> = {
+  let playerTwoRoundWins: ChartDataset<'bar'> = {
     label: 'Player 2',
-    data: arvidWins,
+    data: playerTwoWins,
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     borderWidth: 1,
@@ -73,7 +73,7 @@
 
   let barChartData: ChartData<'bar'> = {
     labels,
-    datasets: [martinRoundWins, arvidRoundWins]
+    datasets: [playerOneRoundWins, playerTwoRoundWins]
   };
 
   onMount(() => {

@@ -1,10 +1,10 @@
-export type Winner = 'martin' | 'arvid';
+export type Player = 'playerOne' | 'playerTwo';
 
 export type GameWin = {
-  winner: Winner;
+  winner: Player;
   dateStamp: string;
-  martinRoundWins: number;
-  martinAces: number;
-  arvidRoundWins: number;
-  arvidAces: number;
+  playerOneRoundWins: number;
+  playerOneAces: number;
+  playerTwoRoundWins: number;
+  playerTwoAces: number;
 };

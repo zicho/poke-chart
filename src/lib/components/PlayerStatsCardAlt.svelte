@@ -10,22 +10,20 @@
   } from '$lib/components/ui/tooltip';
 
   import {
-    getArvidGameWinRate,
-    getArvidGameWinsTotal,
     getLatestGameWinner,
-    getMartinGameWinRate,
-    getMartinGameWinsTotal
+    getPlayerGameWinRate,
+    getPlayerGameWinsTotal
   } from '$lib/state/TotalWinState.svelte';
 
   import {
-    getArvidAceRate,
-    getArvidAcesTotal,
-    getArvidRoundWinRate,
-    getArvidRoundWinsTotal,
-    getMartinAceRate,
-    getMartinAcesTotal,
-    getMartinRoundWinRate,
-    getMartinRoundWinsTotal
+    getPlayerTwoAceRate,
+    getPlayerTwoAcesTotal,
+    getPlayerTwoRoundWinRate,
+    getPlayerTwoRoundWinsTotal,
+    getPlayerOneAceRate,
+    getPlayerOneAcesTotal,
+    getPlayerOneRoundWinRate,
+    getPlayerOneRoundWinsTotal
   } from '$lib/state/RoundWinsState.svelte';
 
   type PlayerStats = {
@@ -42,26 +40,28 @@
 
   let player1 = $derived<PlayerStats>({
     playerName: 'Player 1',
-    totalGameWins: getMartinGameWinsTotal(),
-    totalRoundWins: getMartinRoundWinsTotal(),
-    totalAces: getMartinAcesTotal(),
-    gameWinRate: getMartinGameWinRate(),
-    roundWinRate: getMartinRoundWinRate(),
-    aceRate: getMartinAceRate(),
-    leader: getMartinGameWinsTotal() > getArvidGameWinsTotal(),
-    latestGameWinner: getLatestGameWinner() === 'martin'
+    totalGameWins: getPlayerGameWinsTotal('playerOne'),
+    totalRoundWins: getPlayerTwoRoundWinsTotal(),
+    totalAces: getPlayerTwoAcesTotal(),
+    gameWinRate: getPlayerGameWinRate('playerOne'),
+    roundWinRate: getPlayerTwoRoundWinRate(),
+    aceRate: getPlayerTwoAceRate(),
+    leader:
+      getPlayerGameWinsTotal('playerOne') > getPlayerGameWinsTotal('playerOne'),
+    latestGameWinner: getLatestGameWinner() === 'playerOne'
   });
 
   let player2 = $derived<PlayerStats>({
     playerName: 'Player 2',
-    totalGameWins: getArvidGameWinsTotal(),
-    totalRoundWins: getArvidRoundWinsTotal(),
-    totalAces: getArvidAcesTotal(),
-    gameWinRate: getArvidGameWinRate(),
-    roundWinRate: getArvidRoundWinRate(),
-    aceRate: getArvidAceRate(),
-    leader: getArvidGameWinsTotal() > getMartinGameWinsTotal(),
-    latestGameWinner: getLatestGameWinner() === 'arvid'
+    totalGameWins: getPlayerGameWinsTotal('playerTwo'),
+    totalRoundWins: getPlayerTwoRoundWinsTotal(),
+    totalAces: getPlayerTwoAcesTotal(),
+    gameWinRate: getPlayerGameWinRate('playerTwo'),
+    roundWinRate: getPlayerTwoRoundWinRate(),
+    aceRate: getPlayerTwoAceRate(),
+    leader:
+      getPlayerGameWinsTotal('playerTwo') > getPlayerGameWinsTotal('playerOne'),
+    latestGameWinner: getLatestGameWinner() === 'playerTwo'
   });
 </script>
 

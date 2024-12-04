@@ -1,5 +1,5 @@
 import { getDateStringISO } from '$lib/dateUtils';
-import type { GameWin as GameResults, Winner } from '$lib/types';
+import type { GameWin as GameResults, Player } from '$lib/types';
 import type { Chart } from 'chart.js';
 import { lineChart } from './RoundWinsState.svelte';
 import { currentDate, dataInterval } from './AppState.svelte';
@@ -9,21 +9,21 @@ export function seedResults(gamesCount: number): GameResults[] {
   const wins = [];
 
   for (let i = 0; i < gamesCount; i++) {
-    let martinRoundWins = 0;
-    let arvidRoundWins = 0;
+    let playerOneRoundWins = 0;
+    let playerTwoRoundWins = 0;
 
-    let martinAces = 0;
-    let arvidAces = 0;
+    let playerOneAces = 0;
+    let playerTwoAces = 0;
 
-    while (martinRoundWins < 3 && arvidRoundWins < 3) {
+    while (playerOneRoundWins < 3 && playerTwoRoundWins < 3) {
       const ace = Math.random() < 0.05;
 
       if (Math.random() < 0.5) {
-        martinRoundWins++;
-        if (ace) martinAces++;
+        playerOneRoundWins++;
+        if (ace) playerOneAces++;
       } else {
-        arvidRoundWins++;
-        if (ace) arvidAces++;
+        playerTwoRoundWins++;
+        if (ace) playerTwoAces++;
       }
     }
 
@@ -31,11 +31,12 @@ export function seedResults(gamesCount: number): GameResults[] {
     const dayOffset = Math.random() < 0.5 ? 1 : 0;
 
     const result: GameResults = {
-      arvidRoundWins,
-      martinRoundWins,
-      arvidAces,
-      martinAces,
-      winner: martinRoundWins > arvidRoundWins ? 'martin' : 'arvid',
+      playerTwoRoundWins,
+      playerOneRoundWins,
+      playerTwoAces,
+      playerOneAces,
+      winner:
+        playerOneRoundWins > playerTwoRoundWins ? 'playerOne' : 'playerTwo',
       // Only add a day 50% of the time
       dateStamp: getDateStringISO(i + dayOffset)
     };
@@ -76,34 +77,31 @@ export const getGameWinsByDate = () => {
       // If the date is not already in the accumulator, initialize it
       if (!acc[item.dateStamp]) {
         acc[item.dateStamp] = {
-          martinWins: 0,
-          arvidWins: 0
+          playerOneWins: 0,
+          playerTwoWins: 0
         };
       }
 
       // Increment the win count for the winner
-      if (item.winner === 'martin') {
-        acc[item.dateStamp].martinWins++;
-      } else if (item.winner === 'arvid') {
-        acc[item.dateStamp].arvidWins++;
+      if (item.winner === 'playerOne') {
+        acc[item.dateStamp].playerOneWins++;
+      } else if (item.winner === 'playerTwo') {
+        acc[item.dateStamp].playerTwoWins++;
       }
 
       return acc;
     },
-    {} as Record<string, { martinWins: number; arvidWins: number }>
+    {} as Record<string, { playerOneWins: number; playerTwoWins: number }>
   );
 
   return groupedWins;
 };
 
-export const getArvidGameWins = () =>
-  gameWins.filter((x) => x.winner === 'arvid');
+export const getPlayerGameWins = (player: Player) =>
+  gameWins.filter((x) => x.winner === player);
 
-export const getMartinGameWinsTotal = () =>
-  gameWins.filter((x) => x.winner === 'martin').length;
-
-export const getArvidGameWinsTotal = () =>
-  gameWins.filter((x) => x.winner === 'arvid').length;
+export const getPlayerGameWinsTotal = (player: Player) =>
+  getPlayerGameWins(player).length;
 
 export function addGameResults(results: GameResults) {
   gameWins.push(results);
@@ -116,8 +114,8 @@ export function addGameResults(results: GameResults) {
   lineChart.ref.data.labels = lineChart.ref.data.labels || [];
   lineChart.ref.data.labels.push(results.dateStamp);
 
-  lineChart.ref.data.datasets[0].data.push(results.martinRoundWins);
-  lineChart.ref.data.datasets[1].data.push(results.arvidRoundWins);
+  lineChart.ref.data.datasets[0].data.push(results.playerOneRoundWins);
+  lineChart.ref.data.datasets[1].data.push(results.playerTwoRoundWins);
 
   if (!barChart?.ref?.data) {
     console.error('Bar chart is not initialized');
@@ -133,40 +131,38 @@ export function addGameResults(results: GameResults) {
 
   const lastIndex = barChart.ref.data.labels.length - 1;
 
-  const martinData = barChart.ref.data.datasets[0]?.data;
-  const arvidData = barChart.ref.data.datasets[1]?.data;
+  const playerOneData = barChart.ref.data.datasets[0]?.data;
+  const playerTwoData = barChart.ref.data.datasets[1]?.data;
 
-  if (!Array.isArray(martinData) || !Array.isArray(arvidData)) {
+  if (!Array.isArray(playerOneData) || !Array.isArray(playerTwoData)) {
     console.error('Bar chart datasets are not properly initialized');
     return;
   }
 
-  const martinWins =
-    typeof martinData[lastIndex] === 'number' ? martinData[lastIndex] : 0;
-  const arvidWins =
-    typeof arvidData[lastIndex] === 'number' ? arvidData[lastIndex] : 0;
+  const playerOneWins =
+    typeof playerOneData[lastIndex] === 'number' ? playerOneData[lastIndex] : 0;
+  const playerTwoWins =
+    typeof playerTwoData[lastIndex] === 'number' ? playerTwoData[lastIndex] : 0;
 
-  if (results.winner === 'martin') {
-    martinData[lastIndex] = martinWins + 1;
+  if (results.winner === 'playerOne') {
+    playerOneData[lastIndex] = playerOneWins + 1;
   } else {
-    arvidData[lastIndex] = arvidWins + 1;
+    playerTwoData[lastIndex] = playerTwoWins + 1;
   }
 
   lineChart.ref.update();
   barChart.ref.update();
 }
 
-export const getMartinGameWinRate = () =>
-  calculateWinRate(getMartinGameWinsTotal());
-export const getArvidGameWinRate = () =>
-  calculateWinRate(getArvidGameWinsTotal());
+export const getPlayerGameWinRate = (player: Player) =>
+  calculateWinRate(getPlayerGameWinsTotal(player));
 
 const calculateWinRate = (wins: number) => {
   const totalGames = gameWins.length;
   return totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
 };
 
-export const getLatestGameWinner = (): Winner | null => {
+export const getLatestGameWinner = (): Player | null => {
   if (!gameWins.length) return null;
   return gameWins[gameWins.length - 1].winner;
 };

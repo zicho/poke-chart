@@ -39,50 +39,50 @@
 
   const sortedDates = Object.keys(gameWinsData).sort();
 
-  let martinGameTotal = 0;
-  let arvidGameTotal = 0;
+  let playerOneGameTotal = 0;
+  let playerTwoGameTotal = 0;
 
   let mode = $state<'all' | 'games' | 'rounds'>('all');
 
   const cumulativeGameData = sortedDates.map((date) => {
-    martinGameTotal += gameWinsData[date].martinWins;
-    arvidGameTotal += gameWinsData[date].arvidWins;
+    playerOneGameTotal += gameWinsData[date].playerOneWins;
+    playerTwoGameTotal += gameWinsData[date].playerTwoWins;
 
     return {
       date,
-      martinGameTotal,
-      arvidGameTotal
+      playerOneGameTotal,
+      playerTwoGameTotal
     };
   });
 
-  let martinRoundTotal = 0;
-  let arvidRoundTotal = 0;
+  let playerOneRoundTotal = 0;
+  let playerTwoRoundTotal = 0;
 
   const cumulativeRoundData = sortedDates.map((date) => {
-    martinRoundTotal += roundWinsData[date].martinRoundWins;
-    arvidRoundTotal += roundWinsData[date].arvidRoundWins;
+    playerOneRoundTotal += roundWinsData[date].playerOneRoundWins;
+    playerTwoRoundTotal += roundWinsData[date].playerTwoRoundWins;
 
     return {
       date,
-      martinRoundTotal,
-      arvidRoundTotal
+      playerOneRoundTotal,
+      playerTwoRoundTotal
     };
   });
 
   const tension = 0.1;
   const borderDash = [5, 5];
 
-  let martinGameWinsDataset: ChartDataset<'line'> = {
+  let playerOneGameWinsDataset: ChartDataset<'line'> = {
     label: 'Player 1 - Game Wins',
-    data: cumulativeGameData.map((x) => x.martinGameTotal),
+    data: cumulativeGameData.map((x) => x.playerOneGameTotal),
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     tension
   };
 
-  let martinRoundWinsDataset: ChartDataset<'line'> = {
+  let playerOneRoundWinsDataset: ChartDataset<'line'> = {
     label: 'Player 1 - Round Wins',
-    data: cumulativeRoundData.map((x) => x.martinRoundTotal),
+    data: cumulativeRoundData.map((x) => x.playerOneRoundTotal),
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     borderDash,
@@ -90,17 +90,17 @@
     yAxisID: 'y2' // Link this dataset to the secondary Y-axis
   };
 
-  let arvidGameWinsDataset: ChartDataset<'line'> = {
+  let playerTwoGameWinsDataset: ChartDataset<'line'> = {
     label: 'Player 2 - Game Wins',
-    data: cumulativeGameData.map((x) => x.arvidGameTotal),
+    data: cumulativeGameData.map((x) => x.playerTwoGameTotal),
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     tension
   };
 
-  let arvidRoundWinsDataset: ChartDataset<'line'> = {
+  let playerTwoRoundWinsDataset: ChartDataset<'line'> = {
     label: 'Player 2 - Round Wins',
-    data: cumulativeRoundData.map((x) => x.arvidRoundTotal),
+    data: cumulativeRoundData.map((x) => x.playerTwoRoundTotal),
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     borderDash,
@@ -109,10 +109,10 @@
   };
 
   let datasets = [
-    martinGameWinsDataset,
-    martinRoundWinsDataset,
-    arvidGameWinsDataset,
-    arvidRoundWinsDataset
+    playerOneGameWinsDataset,
+    playerOneRoundWinsDataset,
+    playerTwoGameWinsDataset,
+    playerTwoRoundWinsDataset
   ];
 
   $effect(() => {
@@ -120,15 +120,21 @@
 
     if (mode === 'all') {
       lineChart.data.datasets = [
-        martinGameWinsDataset,
-        martinRoundWinsDataset,
-        arvidGameWinsDataset,
-        arvidRoundWinsDataset
+        playerOneGameWinsDataset,
+        playerOneRoundWinsDataset,
+        playerTwoGameWinsDataset,
+        playerTwoRoundWinsDataset
       ];
     } else if (mode === 'games') {
-      lineChart.data.datasets = [martinGameWinsDataset, arvidGameWinsDataset];
+      lineChart.data.datasets = [
+        playerOneGameWinsDataset,
+        playerTwoGameWinsDataset
+      ];
     } else {
-      lineChart.data.datasets = [martinRoundWinsDataset, arvidRoundWinsDataset];
+      lineChart.data.datasets = [
+        playerOneRoundWinsDataset,
+        playerTwoRoundWinsDataset
+      ];
     }
 
     lineChart?.update();

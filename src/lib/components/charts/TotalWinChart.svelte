@@ -42,21 +42,21 @@
 
   const labels = Object.keys(chartData);
 
-  // Step 2: Extract Martin's and Arvid's wins into separate arrays
-  const martinWins = labels.map((date) => chartData[date].martinWins);
-  const arvidWins = labels.map((date) => chartData[date].arvidWins);
+  // Step 2: Extract PlayerOne's and PlayerTwo's wins into separate arrays
+  const playerOneWins = labels.map((date) => chartData[date].playerOneWins);
+  const playerTwoWins = labels.map((date) => chartData[date].playerTwoWins);
 
-  let martinGameWins: ChartDataset<'bar'> = {
+  let playerOneGameWins: ChartDataset<'bar'> = {
     label: 'Player 1',
-    data: martinWins,
+    data: playerOneWins,
     borderColor: Utils.CHART_COLORS.red,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.2),
     borderRadius: 10
   };
 
-  let arvidGameWins: ChartDataset<'bar'> = {
+  let playerTwoGameWins: ChartDataset<'bar'> = {
     label: 'Player 2',
-    data: arvidWins,
+    data: playerTwoWins,
     borderColor: Utils.CHART_COLORS.green,
     backgroundColor: Utils.transparentize(Utils.CHART_COLORS.green, 0.2),
     borderRadius: 10
@@ -76,7 +76,7 @@
 
   let barChartData: ChartData = {
     labels,
-    datasets: [martinGameWins, arvidGameWins]
+    datasets: [playerOneGameWins, playerTwoGameWins]
   };
 
   onMount(() => {
