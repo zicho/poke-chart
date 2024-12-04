@@ -10,11 +10,9 @@
   } from '$lib/components/ui/tooltip';
 
   import {
-    getArvidGameWinRate,
-    getArvidGameWinsTotal,
     getLatestGameWinner,
-    getMartinGameWinRate,
-    getMartinGameWinsTotal
+    getPlayerGameWinCount,
+    getPlayerGameWinRate
   } from '$lib/state/TotalWinState.svelte';
 
   import {
@@ -27,6 +25,7 @@
     getMartinRoundWinRate,
     getMartinRoundWinsTotal
   } from '$lib/state/RoundWinsState.svelte';
+  import { players } from '$lib/state/AppState.svelte';
 
   type PlayerStats = {
     playerName: string;
@@ -42,26 +41,26 @@
 
   let player1 = $derived<PlayerStats>({
     playerName: 'Player 1',
-    totalGameWins: getMartinGameWinsTotal(),
+    totalGameWins: getPlayerGameWinCount('martin'),
     totalRoundWins: getMartinRoundWinsTotal(),
     totalAces: getMartinAcesTotal(),
-    gameWinRate: getMartinGameWinRate(),
+    gameWinRate: getPlayerGameWinRate('martin'),
     roundWinRate: getMartinRoundWinRate(),
     aceRate: getMartinAceRate(),
-    leader: getMartinGameWinsTotal() > getArvidGameWinsTotal(),
-    latestGameWinner: getLatestGameWinner() === 'martin'
+    leader: getPlayerGameWinCount('martin') > getPlayerGameWinCount('arvid'),
+    latestGameWinner: getLatestGameWinner()?.playerId === players.playerOne.id
   });
 
   let player2 = $derived<PlayerStats>({
     playerName: 'Player 2',
-    totalGameWins: getArvidGameWinsTotal(),
+    totalGameWins: getPlayerGameWinCount('arvid'),
     totalRoundWins: getArvidRoundWinsTotal(),
     totalAces: getArvidAcesTotal(),
-    gameWinRate: getArvidGameWinRate(),
+    gameWinRate: getPlayerGameWinRate('arvid'),
     roundWinRate: getArvidRoundWinRate(),
     aceRate: getArvidAceRate(),
-    leader: getArvidGameWinsTotal() > getMartinGameWinsTotal(),
-    latestGameWinner: getLatestGameWinner() === 'arvid'
+    leader: getPlayerGameWinCount('arvid') > getPlayerGameWinCount('martin'),
+    latestGameWinner: getLatestGameWinner()?.playerId === players.playerTwo.id
   });
 </script>
 

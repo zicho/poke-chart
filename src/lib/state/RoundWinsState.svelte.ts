@@ -9,27 +9,25 @@ export let lineChart = $state<ChartWrapper>({
   ref: undefined
 });
 
-export const getMartinRoundWins = () => gameWins.map((x) => x.martinRoundWins);
-export const getArvidRoundWins = () => gameWins.map((x) => x.arvidRoundWins);
-
 export const getRoundWinsByDate = () => {
   const groupedWins = gameWins.reduce(
     (acc, item) => {
       // If the date is not already in the accumulator, initialize it
-      if (!acc[item.dateStamp]) {
-        acc[item.dateStamp] = {
-          martinRoundWins: 0,
-          arvidRoundWins: 0
+      if (!acc[item.date.toString()]) {
+        acc[item.date.toString()] = {
+          playerOneWins: 0,
+          playerTwoWins: 0
         };
       }
 
       // Increment the round win count for each player
-      acc[item.dateStamp].martinRoundWins += item.martinRoundWins;
-      acc[item.dateStamp].arvidRoundWins += item.arvidRoundWins;
+      // todo: fix this
+      acc[item.date.toString()].playerOneWins += item.winner.roundWins;
+      acc[item.date.toString()].playerTwoWins += item.loser.roundWins;
 
       return acc;
     },
-    {} as Record<string, { martinRoundWins: number; arvidRoundWins: number }>
+    {} as Record<string, { playerOneWins: number; playerTwoWins: number }>
   );
 
   return groupedWins;

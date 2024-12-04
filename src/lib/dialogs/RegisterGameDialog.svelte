@@ -4,54 +4,72 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
-  import { currentDate } from '$lib/state/AppState.svelte';
-  import type { GameWin } from '$lib/types';
+  import { currentDate, players } from '$lib/state/AppState.svelte';
+  import type { GameResult, GameWinDeprecated, PlayerResult } from '$lib/types';
 
   let {
     open = $bindable(),
     onSave
   }: {
     open: boolean;
-    onSave: (results: GameWin) => void;
+    onSave: (results: GameResult) => void;
   } = $props();
 
-  let martinRoundWins = $state(0);
-  let martinAces = $state(0);
+  let playerOneRoundWins = $state(0);
+  let playerOneAces = $state(0);
 
-  let arvidRoundWins = $state(0);
-  let arvidAces = $state(0);
+  let playerTwoRoundWins = $state(0);
+  let playerTwoAces = $state(0);
 
-  let disableWinIncrement = $derived(arvidRoundWins + martinRoundWins >= 5);
-  let disableAceIncrement = $derived(arvidAces + martinAces >= 5);
+  let disableWinIncrement = $derived(
+    playerTwoRoundWins + playerOneRoundWins >= 5
+  );
+  let disableAceIncrement = $derived(playerTwoAces + playerOneAces >= 5);
 
   $effect(() => {
-    if (martinAces > martinRoundWins) {
-      martinAces = martinRoundWins;
+    if (playerOneAces > playerOneRoundWins) {
+      playerOneAces = playerOneRoundWins;
     }
 
-    if (arvidAces > arvidRoundWins) {
-      arvidAces = arvidRoundWins;
+    if (playerTwoAces > playerTwoRoundWins) {
+      playerTwoAces = playerTwoRoundWins;
     }
   });
 
-  function returnResults(): GameWin {
-    let winner = (martinRoundWins > arvidRoundWins ? 'martin' : 'arvid') as
-      | 'martin'
-      | 'arvid';
-
-    const results: GameWin = {
-      dateStamp: currentDate.value,
-      winner,
-      martinRoundWins,
-      martinAces,
-      arvidRoundWins,
-      arvidAces
+  function returnResults(): GameResult {
+    let playerOneResult: PlayerResult = {
+      playerId: players.playerOne.id,
+      roundWins: playerOneRoundWins,
+      aces: playerOneAces
     };
 
-    martinRoundWins = 0;
-    martinAces = 0;
-    arvidRoundWins = 0;
-    arvidAces = 0;
+    let playerTwoResult: PlayerResult = {
+      playerId: players.playerTwo.id,
+      roundWins: playerTwoRoundWins,
+      aces: playerTwoAces
+    };
+
+    let winner: PlayerResult;
+    let loser: PlayerResult;
+
+    if (playerOneResult.roundWins > playerTwoResult.roundWins) {
+      winner = playerOneResult;
+      loser = playerTwoResult;
+    } else {
+      winner = playerTwoResult;
+      loser = playerOneResult;
+    }
+
+    const results: GameResult = {
+      date: currentDate.value,
+      winner,
+      loser
+    };
+
+    playerOneRoundWins = 0;
+    playerOneAces = 0;
+    playerTwoRoundWins = 0;
+    playerTwoAces = 0;
 
     return results;
   }
@@ -68,15 +86,16 @@
     </div>
     <Counter
       label="Wins"
-      bind:currentVal={martinRoundWins}
+      bind:currentVal={playerOneRoundWins}
       max={3}
       disableIncrement={disableWinIncrement}
     />
     <Counter
       label="Aces"
-      bind:currentVal={martinAces}
+      bind:currentVal={playerOneAces}
       max={3}
-      disableIncrement={disableAceIncrement || martinAces === martinRoundWins}
+      disableIncrement={disableAceIncrement ||
+        playerOneAces === playerOneRoundWins}
     />
     <Separator class="mt-4" />
     <div class="grid grid-cols-4 items-center gap-4">
@@ -84,22 +103,23 @@
     </div>
     <Counter
       label="Wins"
-      bind:currentVal={arvidRoundWins}
+      bind:currentVal={playerTwoRoundWins}
       max={3}
       disableIncrement={disableWinIncrement}
     />
     <Counter
       label="Aces"
-      bind:currentVal={arvidAces}
+      bind:currentVal={playerTwoAces}
       max={3}
-      disableIncrement={disableAceIncrement || arvidAces === arvidRoundWins}
+      disableIncrement={disableAceIncrement ||
+        playerTwoAces === playerTwoRoundWins}
     />
     <Separator class="mt-4" />
     <Dialog.Footer>
       <Button
         type="submit"
         onclick={() => onSave(returnResults())}
-        disabled={martinRoundWins !== 3 && arvidRoundWins !== 3}
+        disabled={playerOneRoundWins !== 3 && playerTwoRoundWins !== 3}
         class="w-full">Submit scores</Button
       >
     </Dialog.Footer>

@@ -6,7 +6,7 @@
   import { page } from '$app/stores';
   import RegisterGameDialog from '$lib/dialogs/RegisterGameDialog.svelte';
   import { addGameResults } from '$lib/state/TotalWinState.svelte';
-  import type { GameWin } from '$lib/types';
+  import type { GameResult, GameWinDeprecated } from '$lib/types';
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
   import { dataInterval } from '$lib/state/AppState.svelte';
@@ -21,7 +21,7 @@
     registerGameModalOpen = true;
   }
 
-  function onSaveResults(results: GameWin): void {
+  function onSaveResults(results: GameResult): void {
     registerGameModalOpen = false;
     addGameResults(results);
   }

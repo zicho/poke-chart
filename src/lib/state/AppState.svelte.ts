@@ -1,12 +1,34 @@
 import { getDateStringISO } from '$lib/dateUtils';
+import type { Player } from '$lib/types';
 import {
   getLocalTimeZone,
   today,
   type DateValue
 } from '@internationalized/date';
 
-export const currentDate = $state({
-  value: getDateStringISO()
+let playerOne: Player = {
+  id: crypto.randomUUID(),
+  name: 'Player 1',
+  gameWins: 0,
+  roundWins: 0,
+  aces: 0
+};
+
+let playerTwo: Player = {
+  id: crypto.randomUUID(),
+  name: 'Player 2',
+  gameWins: 0,
+  roundWins: 0,
+  aces: 0
+};
+
+export const players = $state({
+  playerOne,
+  playerTwo
+});
+
+export const currentDate = $state<{ value: DateValue }>({
+  value: today(getLocalTimeZone())
 });
 
 type DataIntervalState = {
@@ -16,5 +38,5 @@ type DataIntervalState = {
 
 export const dataInterval = $state<DataIntervalState>({
   from: today(getLocalTimeZone()),
-  to: today(getLocalTimeZone()).add({ days: 8 }) // Add 14 days
+  to: today(getLocalTimeZone()).add({ days: 8 })
 });

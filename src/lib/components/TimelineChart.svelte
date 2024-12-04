@@ -59,8 +59,8 @@
   let arvidRoundTotal = 0;
 
   const cumulativeRoundData = sortedDates.map((date) => {
-    martinRoundTotal += roundWinsData[date].martinRoundWins;
-    arvidRoundTotal += roundWinsData[date].arvidRoundWins;
+    martinRoundTotal += roundWinsData[date].playerOneWins;
+    arvidRoundTotal += roundWinsData[date].playerTwoWins;
 
     return {
       date,
